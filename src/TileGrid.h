@@ -98,11 +98,33 @@ public:
      *
      * @param im1: the first image and its details
      * @param im2: the second image and its details
-     *
+     */
     void swapImages(ImageAndRotation im1, ImageAndRotation im2);
+
+    /* method updateTile
+     * Updates a tile based on the new rotation
+     *
+     * @param im The ImageAndRotation struct
+     */
     void updateTile(ImageAndRotation im);
+
+    /* method toString
+     * Creates a string representation of the whole puzzle in the form
+     *  A b C d 0
+     *  B c D A 1
+     *  ...
+     *
+     * @return A string representing the puzzle
+     */
     string toString();
+
+    /* method replaceGrid
+     * Replaces the current grid of tiles with all new tiles
+     *
+     * @param newTiles The grid of new tiles
+     */
     void replaceGrid(Grid<Tile> newTiles);
+
 private:
     Grid<Tile> tiles;
     Map<string,ImageAndRotation> images;
