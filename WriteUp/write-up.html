@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Edge Match: The Pattern Puzzle Solver</title>
+        <style>
+        .content {
+            max-width: 80%;
+            margin: auto;
+        }
+        html, body {
+            color: #000;
+            font-family: 'arial';
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+<h1 id="edge-match-the-pattern-puzzle-solver">Edge Match: The Pattern Puzzle Solver</h1>
+<center>
+<p><img alt = "Vess Billion Bubbles Cola Puzzle" src="https://web.stanford.edu/~cgregg/EdgeMatch/vess-billion-bubbles-pcs1.jpg" style="width: 50%;"></p>
+Image source: <a href="http://www.robspuzzlepage.com/pattern.htm">Rob’s Puzzle Page</a>
+</center>
+<p>In this assignment, you will be writing code that will solve the <em>edge matching</em> category of puzzles. In particular, your solution will be able to solve a traditional 3x3 grid. Edge matching puzzles have been around since the late 1800s, and they consist of a set of (generally square) tiles that have patterns such that two edges of a tile “match” in a recognizable pattern. For the tiles shown above, matching edges consist of a bottle top in a particular color triangle and a bottle bottom in the same color triangle. The top-right tile in the image above matches its red bottle bottom with the tile to its left’s red bottle-top, and it also matches the cream bottle top with the cream bottle bottom of the tile below it. The image above happens to be a vintage puzzle for <em>Vess Cola</em> that was a common advertising giveaway during the 1930s-1950s.</p>
+<p>Edge-matching games are suprisingly difficult to solve by hand. Each tile can be oriented four ways, and each tile can be in any of the nine board positions. This gives a total of <code>9! * 4^9</code> combinations, or roughly <em>95 billion</em> different positions. But, with your crack recursive backtracking skills, and thanks to the fast computation abilities of modern computers, your program will be able to completely solve these puzzles in mere milliseconds.</p>
+<p>To complete the assignment, you will be using C++ classes, and (as mentioned above), you will be implementing a recursive backtracking algorithm to produce the puzzle solutions. Download the starter code below. You may also want to take a look at the Demo Program, available for Mac, Windows, and Linux.</p>
+<center>
+<table>
+<tr>
+<td align="center">
+<img alt = "Starter Code" src="https://web.stanford.edu/~cgregg/EdgeMatch/download.png" style="width: 64;"><br>Starter Code
+</td>
+<td align="center">
+<a href="https://web.stanford.edu/~cgregg/EdgeMatch/EdgeMatch-mac.zip"><img alt = "Mac Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/apple.png" style="width: 64;"><br>Mac Demo</a>
+</td>
+<td align="center">
+<img alt = "Windows Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/microsoft.png" style="width: 64;"><br>Windows Demo
+</td>
+<td align="center">
+<img alt = "Linux Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/tux.png" style="width: 64;"><br>Linux Demo
+</td>
+</table>
+</center>
+<p>You will turn in the following files:</p>
+<ol type="1">
+<li><strong><code>Tile.cpp</code></strong>, the code for describing a tile.</li>
+<li><strong><code>edge-match.cpp</code></strong>, the code that runs the game and solves the puzzles.</li>
+</ol>
+<h1 id="puzzle-overview">Puzzle Overview</h1>
+<p>The Edge-Matching puzzles we will look at are 3x3 square tile puzzles where each tile can be in any of four positions on the board, and in any of the nine available positions. The user can play the game manually with the mouse, or they can solve the puzzles in one of two ways: either timed or one-at-a-time. If the game is played manually, clicking on a tile will rotate it one position clockwise, and dragging a tile on top of another tile will swap the two tiles and retain their current orientation. When the player solves the game, a message alert appears to congratulate the player.</p>
+<p>When the user decides to time the solutions, all solutions are found at once, and an overall time to find all the solutions is shown. When the user decides to find the solutions one at a time, each solution is found and displayed, and the user has the choice to save the solution in a form that can be re-loaded later.</p>
+<p>When the program begins, the user is given a choice of which puzzle they want to play. The available puzzles have been curated from a number of sources – some are actual photographs of vintage games, and some are computer-generated. After choosing a puzzle, the player gets to further choose a starting orientation. Some puzzles have solved orientations, and others have almost-solved starting orientations.</p>
+<center>
+<td>
+<img alt = "Program Start" src="https://web.stanford.edu/~cgregg/EdgeMatch/dogs-choice.png" style="width: 70%;">
+</td>
+<br> Game Start
+<p>
+</center>
+<p>Once the player has chosen a puzzle, the puzzle appears on the screen and the player has the option to play the game manually. Note that some of the games have been constructed from photographs of real puzzles (the dog puzzle is an example), so the edges don’t always line up exactly. Some of the puzzles (e.g., tens and turtles) have been computer-generated, and all edges should line up perfectly.</p>
+<p>The console window also shows the beginning layout and orientation of the tiles. We describe this notation in another section, below.</p>
+<center>
+<td>
+<img alt = "Playing Manually" src="https://web.stanford.edu/~cgregg/EdgeMatch/dogs-play.png" style="width: 100%;">
+</td>
+<br> Playing Manually
+<p>
+</center>
+<p>Once the player is done trying to solve the puzzle manually, typing any key on the keyboard will produce another menu to allow timed or single solutions:</p>
+<center>
+<td>
+<img alt = "Timed Solution" src="https://web.stanford.edu/~cgregg/EdgeMatch/timed-solution.png" style="width: 100%;">
+</td>
+<br> Timing the Solution
+<p>
+</center>
+<p>Because of symmetry considerations, there will always be at least four solutions for each game, and there could be more. All correct solutions are shown in the console (and each solved image briefly flashes on the screen), and the final orientation found remains on the screen. The timing does not include the animations.</p>
+<p>If the player chooses to solve the puzzle one solution at a time, the player can save the solutions after each one, and then can re-load them later. The solutions are saved in text format.</p>
+<center>
+<td>
+<img alt = "Single Solution" src="https://web.stanford.edu/~cgregg/EdgeMatch/cola-solution.png" style="width: 100%;">
+</td>
+<br> Finding One Solution at a Time
+</center>
+<h1 id="puzzle-notation">Puzzle Notation</h1>
+<p>In order to solve a puzzle algorithmically, we need a computer-friendly representation of a tile (that said, an awesome follow-on project would be to simply use <a href="https://en.wikipedia.org/wiki/Computer_vision">computer vision</a> to solve puzzles!). We have chosen the format described below.</p>
+<p>When you start a puzzle, you will see the <em>Beginning tiles</em> shown. For example:</p>
+<pre><code>Beginning tiles: 
+c a C D 0
+D a c B 0
+A c d B 0
+d C A b 0
+d b C A 0
+c d B A 0
+b a C D 0
+A b d B 0
+a B C d 0</code></pre>
+<p>Each line represents a single tile, with letters representing the sides, and the number represnting the rotational orientation.</p>
+<p>To create a “match” in a puzzle, two tiles are needed, with each tile producing one half of the match (e.g., the top and bottom of a red-triangle cola bottle, or the head and tail of an orange-spotted dog). To represent a match, a letter is used, with the upper case varient (e.g., “A”) representing one of the halves (“red-triangle cola bottle top”) and the lower case variant (“a”) representing the corresponding match (“red-triangle cola bottle bottom”).</p>
+<p>The orientation of a tile is based on the original image of each tile, with all tiles starting with an orientation of “0”. The orientation increases as the tile is rotated clockwise, “1” would be a tile rotated clockwise once, “2” would be a tile rotated twice, and “3” would be a tile rotated three times. A tile rotated four times would be in its original position, and therefore have an orientation of “0” again.</p>
+<p>Here is the original tile for one of the <em>turtle</em> puzzle pieces:</p>
+<p><img alt = "Single Turtle" src="https://web.stanford.edu/~cgregg/EdgeMatch/singleTurtle.png" style="width: 20%;"></p>
+<p>For a turtle, we have arbitrarily chosen <code>A</code> for blue, <code>B</code> for green, <code>C</code> for red, and <code>D</code> for yellow. We have also arbitrarily chosen the turtle head to be uppercase, and the turtle’s tail to be lowercase. The following four images show the same piece rotated through its four positions. The letters are annotated on each part of a turtle on each tile, and the orientation is shown in the middle.</p>
+<p><img alt="single turtle annotated 0" src="https://web.stanford.edu/~cgregg/EdgeMatch/singleTurtleAnnotated.png" style="width: 20%"> -&gt; <img alt="single turtle annotated 1" src="https://web.stanford.edu/~cgregg/EdgeMatch/singleTurtleAnnotated1.png" style="width: 20%"> -&gt; <img alt="single turtle annotated 2" src="https://web.stanford.edu/~cgregg/EdgeMatch/singleTurtleAnnotated2.png" style="width: 20%"> -&gt; <img alt="single turtle annotated 3" src="https://web.stanford.edu/~cgregg/EdgeMatch/singleTurtleAnnotated3.png" style="width: 20%"></p>
+<p>The following is a solved and annotated turtle puzzle. It also has the row and column annotated in the text (in <b><span style="color: #942193;">purple</span></b>).</p>
+<center>
+<td>
+<img alt = "Annotated Turtles" src="https://web.stanford.edu/~cgregg/EdgeMatch/turtle-annotated.png" style="width: 100%;">
+</td>
+<br> Annotated Turtles - the center turtle is the only one orientated in its original image form
+</center>
+<p>Note that all lined-up turtles have the same uppercase and lowercase combination (A/a, B/b, C/c, or D/d). The only turtle in its original image rotation happens to be the center turtle. All others are rotated.</p>
+<h1 id="implementation-details">Implementation Details</h1>
+<p>You will write code in the following two files. We will describe them in detail in this section.</p>
+<ol type="1">
+<li><strong><code>Tile.cpp</code></strong>, the code for describing a tile.</li>
+<li><strong><code>edge-match.cpp</code></strong>, the code that runs the game and solves the puzzles.</li>
+</ol>
+<h1 id="tile.h-and-tile.cpp"><code>Tile.h</code> and <code>Tile.cpp</code></h1>
+<p>As we described in <a href="#puzzle-notation">Puzzle Notation</a>, we have devised a way to describe a tile such that it can be used to solve puzzles. <code>Tile.h</code> and <code>Tile.cpp</code> are the files that define and implement a tile description in a C++ class, respectively. <code>Tile.h</code> has been commented heavily so that you know what each function is supposed to do, and we expand on that documentation here. We have written the <em>default</em> constructor for the class for you, but you are responsible for writing the constructor that takes a <code>std::string</code> as a parameter, and you are also responsible for the five remaining functions (some are only one-liners). Although you are not required to do so, you may add <em>private</em> functions and class variables to the class, but you <em>may not</em> change the <em>public</em> functions. Do not change any of the method signatures, either (i.e., don’t change the parameters). In other words: someone else using the <code>Tile</code> class should be able to drop your <code>Tile.h</code> and <code>Tile.cpp</code> files into their own code and use it without any changes to their other code.</p>
+<table>
+<tr>
+<th>
+<code>Tile</code> method
+</th>
+<th>
+Description
+</th>
+</tr>
+<tr>
+<td style="width: 30%;">
+<code>Tile()</code>
+</td>
+<td>
+The default constructor. We have written this for you. This creates a <code>Tile</code> instance with default values. You should not need to use the default constructor, but it is necessary so we can create a <code>Grid</code> of tiles.
+</td>
+</tr>
+<tr>
+<td>
+<code>Tile(string s)</code>
+</td>
+<td>
+A constructor that parses a string such as <code>A B a b 0</code> and produces a <code>Tile</code>. The orientation is optional, and if it is not present in the string (e.g., the string is simply something like <code>A B a b</code>, then you should set the orientation to 0.
+</td>
+</tr>
+<tr>
+<td>
+<code>bool isMatched(Tile &amp;other, Connection otherLocation)</code>
+</td>
+<td>
+This method sees if the current <code>Tile</code> is properly matched with another <code>Tile</code>. This means that tiles are arranged such that the edge that is touching is a correct match. The location of the other tile is given relative to the current tile, using an <code>enum</code>, as defined in <code>Tile.h</code>. If you have never used an <code>enum</code> before, it is straightforward: <code>otherLocation</code> will have a value of any one of <code>Tile::ABOVE</code>, <code>Tile::RIGHT</code>, <code>Tile::BELOW</code>, or <code>Tile::LEFT</code>. You can use the values in an expression such as <code>if</code> <code>(otherLocation</code> <code>==</code> <code>Tile::ABOVE)</code> <code>{</code>. For more information about <code>enum</code>s in C++, see <a href="https://en.cppreference.com/w/cpp/language/enum">here</a>
+</td>
+</tr>
+<tr>
+<td>
+<code>int getOrientation()</code>
+</td>
+<td>
+Returns the orientation of the tile.
+</td>
+</tr>
+<tr>
+<td>
+<code>void setOrientation(int orientation)</code>
+</td>
+<td>
+Sets the orientation of the tile.
+</td>
+</tr>
+<tr>
+<td>
+<code>string sidesStr() const</code>
+</td>
+<td>
+Returns a <code>string</code> representation of the sides. If the original tile had a representation of <code>A B a b 0</code>, then this function simply returns <code>ABab</code>. This is used by the <code>TileGrid</code> class to enter the tiles into a map with a <code>string</code> key.
+</td>
+</tr>
+<tr>
+<td>
+<code>friend ostream &amp;operator&lt;&lt;(ostream &amp;out, Tile const &amp;tile)</code>
+</td>
+<td>
+Overloads the <code>&lt;&lt;</code> operator to print out a representation of a tile, in the original form, e.g., <code>A B a b 0</code>
+</td>
+</tr>
+<tr>
+</tr>
+<td>
+ 
+</td>
+<td>
+ 
+</td>
+<tr>
+<th>
+<code>Tile</code> class variable
+</th>
+<th>
+Description
+</th>
+</tr>
+<tr>
+<td>
+<code>int orientation</code>
+</td>
+<td>
+The orientation of a tile. <code>0</code> is the original image orientation, <code>1</code> is rotated clockwise 90 degrees, <code>2</code> is rotated clockwise 180 degrees, and <code>3</code> is rotated clockwise 270 degrees.
+</td>
+</tr>
+<tr>
+<td>
+<code>vector&lt;string&gt; sides</code>
+</td>
+<td>
+A <code>vector</code> that holds the string values (e.g., <code>A</code>). The <code>vector</code> should hold the values in the order they appear the text representation, e.g., for <code>A B a b 0</code>, the <code>vector</code> should have the values in the order <code>A</code> then <code>B</code> then <code>a</code> then <code>b</code>.
+</td>
+</tr>
+</table>
+        </div>
+    </body>
+</html>
