@@ -1,0 +1,9 @@
+A D b d 3
+D a b C 2
+c d A B 1
+B a d A 2
+a d C B 1
+c b C D 1
+b c C A 0
+c A C b 3
+b A C d 3
