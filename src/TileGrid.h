@@ -1,11 +1,11 @@
 #pragma once
 
-#include "vector.h"
-#include "grid.h"
+#include "Tile.h"
 #include "gobjects.h"
+#include "grid.h"
 #include "gwindow.h"
 #include "map.h"
-#include "Tile.h"
+#include "vector.h"
 
 using namespace std;
 
@@ -16,12 +16,12 @@ const int TILE_PIXEL_DIM = 200; // 200px x 200px images
  * and both the orientation and the Tile it represents
  */
 struct ImageAndTile {
-    GImage *im;
+    GImage* im;
     Tile tile;
 };
 
 class TileGrid {
-public:
+  public:
     /* destructor (cleans up images) */
     ~TileGrid();
 
@@ -53,14 +53,14 @@ public:
      * @param row The row to place the tile into
      * @param col The column to place the tile into
      */
-    void placeTile(Tile &tile, int row, int col);
+    void placeTile(Tile& tile, int row, int col);
 
     /* method getGrid
      * Returns a reference to the internal grid of tiles
      *
      * @return The reference to the internal grid of tiles
      */
-    Grid<Tile> &getGrid();
+    Grid<Tile>& getGrid();
 
     /* method saveGrid
      * Saves the puzzle to a file
@@ -75,7 +75,7 @@ public:
      *
      * @return a GWindow reference
      */
-    GWindow &getWindow();
+    GWindow& getWindow();
 
     /* method getImages
      * Returns a Map of tile strings to the images
@@ -83,7 +83,7 @@ public:
      * @return A reference to the Map with tile strings as keys, and
      *         Image details as values
      */
-    Map<string, ImageAndTile> &getImages();
+    Map<string, ImageAndTile>& getImages();
 
     /* method getTileVec
      * Converts a tile grid into a simple Vector of tiles
@@ -124,8 +124,8 @@ public:
      */
     void replaceGrid(Grid<Tile> newTiles);
 
-private:
+  private:
     Grid<Tile> tiles;
-    Map<string,ImageAndTile> images;
+    Map<string, ImageAndTile> images;
     GWindow gw;
 };

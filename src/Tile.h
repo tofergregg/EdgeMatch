@@ -7,13 +7,13 @@ using namespace std;
 const int NUMSIDES = 4;
 
 class Tile {
-public:
+  public:
     /* enum Connection
-     * This enum represents the placement of a tile when used in the isMatched() function.
-     * ABOVE means that the other tile is located directly above this tile,
-     * RIGHT means that the other tile is located to the right of this tile,
-     * BELOW means that the other tile is located below this tile,
-     * LEFT means that the other tile is located to the left of this tile
+     * This enum represents the placement of a tile when used in the isMatched()
+     * function. ABOVE means that the other tile is located directly above this
+     * tile, RIGHT means that the other tile is located to the right of this
+     * tile, BELOW means that the other tile is located below this tile, LEFT
+     * means that the other tile is located to the left of this tile
      */
     enum Connection {
         ABOVE,
@@ -23,30 +23,34 @@ public:
     };
 
     /* method Tile (default)
-     * The default constructor. Constructs a Tile with default but useless values.
+     * The default constructor. Constructs a Tile with default but useless
+     * values.
      */
     Tile();
 
     /* method Tile (overloaded)
      * @param s A string representing a tile
      *
-     * A constructor that uses a string to populate the orientation and sides vector.
-     * The string must be in the form "A B a b 0" or "A B a b". If the orientation
-     * is not included in the string, the orientation should be set to 0.
+     * A constructor that uses a string to populate the orientation and sides
+     * vector. The string must be in the form "A B a b 0" or "A B a b". If the
+     * orientation is not included in the string, the orientation should be set
+     * to 0.
      */
     Tile(string s);
 
     /* method isMatched
      * @param other The other tile to compare to this one.
-     * @param otherLocation The location of the other tile relative to this tile.
+     * @param otherLocation The location of the other tile relative to this
+     * tile.
      *
-     * @return true if the tiles are in a matching configuration, false if they are not matched.
+     * @return true if the tiles are in a matching configuration, false if they
+     * are not matched.
      *
-     * The isMatched function compares the two tiles in their current orientation and location
-     * relative to each other. If the tiles form a matching configuration, return true, otherwise,
-     * return false.
+     * The isMatched function compares the two tiles in their current
+     * orientation and location relative to each other. If the tiles form a
+     * matching configuration, return true, otherwise, return false.
      */
-    bool isMatched(Tile &other, Connection otherLocation);
+    bool isMatched(Tile& other, Connection otherLocation);
 
     /* method getOrientation
      * @return The orientation of the tile
@@ -55,17 +59,16 @@ public:
 
     /* method setOrientation
      * @param orientation The orientation: 0 = original,
-     * 									   1=rotated right 90 degrees,
-     *                                     2 = rotated right 180 degrees
-     *                                     3 = rotated right 270 degrees
+     * 									   1=rotated right
+     * 90 degrees, 2 = rotated right 180 degrees 3 = rotated right 270 degrees
      */
     void setOrientation(int orientation);
     string sidesStr();
 
-    friend ostream &operator<<(ostream &out, Tile const &tile);
+    friend ostream& operator<<(ostream& out, Tile const& tile);
     friend bool operator<(Tile a, Tile b);
 
-private:
+  private:
     /* class variable orientation
      * The orientation of the tile
      */

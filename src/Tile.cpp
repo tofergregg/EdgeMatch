@@ -1,7 +1,7 @@
 #include "Tile.h"
-#include <cctype>
-#include "vector.h"
 #include "strlib.h"
+#include "vector.h"
+#include <cctype>
 
 using namespace std;
 
@@ -16,7 +16,7 @@ Tile::Tile() {
 Tile::Tile(string s) {
     // reads in an entire string in the form "A B a b 0"
     // where the end digit is the orientation, and is optional
-    Vector<string> parts = stringSplit(s," ");
+    Vector<string> parts = stringSplit(s, " ");
     if (parts.size() == 5) {
         // we have the optional orientation
         orientation = stringToInteger(parts[4]);
@@ -30,13 +30,9 @@ Tile::Tile(string s) {
     }
 }
 
-int Tile::getOrientation() {
-    return orientation;
-}
+int Tile::getOrientation() { return orientation; }
 
-void Tile::setOrientation(int orientation) {
-    this->orientation = orientation;
-}
+void Tile::setOrientation(int orientation) { this->orientation = orientation; }
 
 string Tile::sidesStr() {
     string ss;
@@ -46,7 +42,7 @@ string Tile::sidesStr() {
     return ss;
 }
 
-bool Tile::isMatched(Tile &other, Connection otherLocation) {
+bool Tile::isMatched(Tile& other, Connection otherLocation) {
     string thisSide, otherSide;
 
     if (otherLocation == Tile::ABOVE) {
@@ -70,8 +66,7 @@ bool Tile::isMatched(Tile &other, Connection otherLocation) {
         } else {
             otherSide = other.sides[other.orientation - 1];
         }
-    }
-    else {
+    } else {
         if (orientation % 2 == 0) {
             thisSide = sides[abs(orientation - 2)];
         } else {
@@ -80,18 +75,16 @@ bool Tile::isMatched(Tile &other, Connection otherLocation) {
         otherSide = other.sides[(4 - other.orientation) % 4];
     }
     if ((isupper(thisSide[0]) && islower(otherSide[0])) ||
-            (islower(thisSide[0]) && isupper(otherSide[0]))) {
+        (islower(thisSide[0]) && isupper(otherSide[0]))) {
         return tolower(thisSide[0]) == tolower(otherSide[0]);
     } else {
         return false;
     }
 }
 
-bool operator<(Tile a, Tile b) {
-    return a.sidesStr() < b.sidesStr();
-}
+bool operator<(Tile a, Tile b) { return a.sidesStr() < b.sidesStr(); }
 
-ostream &operator<<(ostream &out, Tile const &tile) {
+ostream& operator<<(ostream& out, Tile const& tile) {
     // prints as follows:
     // A B C D 0
     // Which means that with an orientation of 0, the piece
