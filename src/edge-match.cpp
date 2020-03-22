@@ -15,12 +15,14 @@ using namespace std;
 void init();
 bool allMatch(Grid<Tile> &tiles);
 void populateGrid(Grid<Tile> &tiles, Vector<Tile> &tileVec);
-Vector<Grid<Tile>> solvePuzzle(TileGrid &tg, bool timeIt = false);
+Vector<Grid<Tile>> solvePuzzle(TileGrid &tg);
+void findAllSolutions(Vector<Tile> &tileVec, Grid<Tile> &tiles, int row, int col, Vector<Grid<Tile>> &solutions);
 void solvePuzzle(Vector<Tile> &tileVec, int row, int col, TileGrid &tg,
                  Vector<Grid<Tile>> &solutions, bool timeIt);
 bool loadPuzzle(TileGrid &tg);
 void manualPlay(TileGrid &tg, bool &donePlayingManually);
-bool solvePuzzleSetup(TileGrid &tg);
+void solveAndTimePuzzle(TileGrid &tg, Vector<Grid<Tile>> &solutions);
+void displayAndSaveSolutions(TileGrid &tg, Vector<Grid<Tile>> &solutions);
 
 // #include <QDir>
 
@@ -69,12 +71,66 @@ bool allMatch(Grid<Tile> &tiles) {
  * @param timeIt true if the puzzle solution is being timed, false if not
  * @return a vector of solved puzzle grids
  */
-Vector<Grid<Tile>> solvePuzzle(TileGrid &tg, bool timeIt) {
+Vector<Grid<Tile>> solvePuzzle(TileGrid &tg) {
     // recursively populate tiles and check solution
     Vector<Grid<Tile>> solutions;
     Vector<Tile> tileVec = tg.getTileVec();
-    solvePuzzle(tileVec, 0, 0, tg, solutions, timeIt);
+    // solvePuzzle(tileVec, 0, 0, tg, solutions, timeIt);
+    findAllSolutions(tileVec, tg.getGrid(), 0, 0, solutions);
     return solutions;
+}
+
+/* function findAllSolutions (recursive)
+ *
+ */
+void findAllSolutions(Vector<Tile> &tileVec, Grid<Tile> &tiles, int row, int col, Vector<Grid<Tile>> &solutions) {
+    if (tileVec.size() == 0) {
+        // found potential solution
+        bool matched = allMatch(tiles);
+        if (matched) {
+            solutions.add(tiles);
+        }
+    } else {
+        // for each tile in the vector, remove the tile, and put it at the current position
+        int newCol = col + 1;
+        int newRow = row;
+        if (newCol == tiles.numCols()) {
+            newCol = 0;
+            newRow++;
+        }
+        for (int i=0; i < tileVec.size(); i++) {
+            for (int orientation = 0; orientation < 4; orientation++) {
+                // add to grid
+                Tile t = tileVec[i];
+                Tile origTile = tiles[row][col];
+                int origOrientation = t.getOrientation();
+                t.setOrientation(orientation);
+                tileVec.remove(i);
+                tiles[row][col] = t;
+
+
+                // recurse otherwise because we will never find a match
+                bool canRecurse = true;
+
+                if (tiles.inBounds(row-1,col) && !tiles[row][col].isMatched(tiles[row-1][col], Tile::ABOVE)) {
+                    canRecurse = false;
+                }
+
+                if (tiles.inBounds(row,col-1) && !tiles[row][col].isMatched(tiles[row][col-1], Tile::LEFT)) {
+                    canRecurse = false;
+                }
+                if (canRecurse) {
+                    findAllSolutions(tileVec, tiles, newRow, newCol, solutions);
+                }
+
+                // re-orient and replace
+                t.setOrientation(origOrientation);
+                tileVec.insert(i,t);
+                tiles[row][col] = origTile;
+            }
+        }
+    }
+
 }
 
 /* function solvePuzzle (recursive)
@@ -161,55 +217,52 @@ void init() {
     while (1) {
         bool donePlayingManually = false;
         TileGrid tg;
-        if (!loadPuzzle(tg)) {
+    GConsoleWindow::instance()->requestFocus();
+    if (!loadPuzzle(tg)) {
         cout << "Could not load puzzle." << endl;
         return;
-        }
+    }
 
-        cout << "Beginning tiles: " << endl;
+    cout << "Beginning tiles: " << endl;
+    cout << tg.toString() << endl;
+    manualPlay(tg, donePlayingManually);
+
+    while (!donePlayingManually) {
+        std::this_thread::yield();
+    }
+    GConsoleWindow::instance()->requestFocus();
+    Vector<Grid<Tile>> solutions;
+    solveAndTimePuzzle(tg, solutions);
+    for (Grid<Tile> tiles : solutions) {
+        tg.replaceGrid(tiles);
         cout << tg.toString() << endl;
-        manualPlay(tg, donePlayingManually);
+    }
 
-        while (!donePlayingManually) {
-            std::this_thread::yield();
-        }
-        GConsoleWindow::instance()->requestFocus();
-        if (!solvePuzzleSetup(tg)) break;
+    string seeAllSolutions = getLine("Would you like to see all solutions? (Y/n)? ");
+    if (seeAllSolutions == "" || tolower(seeAllSolutions[0] == 'y')) {
+        displayAndSaveSolutions(tg, solutions);
+    }
+
+    string playAgain = getLine("Would you like to play again (Y/n)? ");
+    if (playAgain != "" && tolower(playAgain[0]) == 'n') break;
+    tg.getWindow().close();
     }
 
     cout << "Thank you for plaing the tile match game!" << endl;
 }
 
-bool solvePuzzleSetup(TileGrid &tg) {
-    bool timeIt = false;
+void solveAndTimePuzzle(TileGrid &tg, Vector<Grid<Tile>> &solutions) {
     Timer t;
-    string response = getLine("Would you like to time your solution (y/N)? ");
-    if (response != "" && toupper(response[0]) == 'Y') {
-        timeIt = true;
-    }
     getLine("Press <enter> to start searching for solutions.");
     cout << endl;
 
-    if (timeIt) {
-        t.start();
-    }
+    t.start();
 
-    Vector<Grid<Tile>> solutions = solvePuzzle(tg, timeIt);
+    solutions = solvePuzzle(tg);
 
-    if (timeIt) {
-        t.stop();
-        cout << "Time: " << t.elapsed() << "ms" << endl;
-    }
-
+    t.stop();
+    cout << "Time: " << t.elapsed() << "ms" << endl;
     cout << "Found " << solutions.size() << " solutions:" << endl;
-    for (Grid<Tile> tiles : solutions) {
-        tg.replaceGrid(tiles);
-        cout << tg.toString() << endl;
-    }
-    string playAgain = getLine("Would you like to play again (Y/n)? ");
-    if (playAgain != "" && tolower(playAgain[0]) == 'n') return false;
-    tg.getWindow().close();
-    return true;
 }
 
 bool loadPuzzle(TileGrid &tg) {
@@ -273,8 +326,24 @@ void manualPlay(TileGrid &tg, bool &donePlayingManually) {
         cout << "Have fun! Use the mouse to move pieces, and click on a piece to" << endl;
         cout << "rotate the piece 90 degrees clockwise." << endl;
         cout << "Press any key on the keyboard to quit manual play mode." << endl;
-        PlayGame(tg,allMatch,donePlayingManually);
+        PlayGame(tg, allMatch, donePlayingManually);
     } else {
         donePlayingManually = true;
+    }
+}
+
+void displayAndSaveSolutions(TileGrid &tg, Vector<Grid<Tile>> &solutions) {
+    for (Grid<Tile> tiles : solutions) {
+        tg.replaceGrid(tiles);
+        cout << tg.toString() << endl;
+
+        string filename = getLine("Please type a file name to save, or <enter> to continue without saving.");
+        if (filename != "") {
+            if (tg.saveGrid(filename)) {
+                cout << "'" << filename << "'" << " saved.";
+            } else {
+                cout << "Could not open file for saving.";
+            }
+        }
     }
 }

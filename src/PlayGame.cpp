@@ -6,7 +6,7 @@ PlayGame::PlayGame(TileGrid &tg, bool (*allMatch)(Grid<Tile> &), bool &donePlayi
     mouseDown = false;
     currIm = nullptr;
     this->allMatch = allMatch;
-    playGameManually(tg,donePlayingManually);
+    playGameManually(tg, donePlayingManually);
     while (!donePlayingManually) {
         std::this_thread::yield();
     }
