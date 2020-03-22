@@ -11,14 +11,13 @@ using namespace std;
 
 const int TILE_PIXEL_DIM = 200; // 200px x 200px images
 
-/* struct ImageAndRotation
+/* struct ImageAndTile
  * This struct keeps track of the image for a tile,
  * and both the orientation and the Tile it represents
  */
-struct ImageAndRotation {
+struct ImageAndTile {
     GImage *im;
-    int orientation;
-    string sidesStr;
+    Tile tile;
 };
 
 class TileGrid {
@@ -84,7 +83,7 @@ public:
      * @return A reference to the Map with tile strings as keys, and
      *         Image details as values
      */
-    Map<string, ImageAndRotation> &getImages();
+    Map<string, ImageAndTile> &getImages();
 
     /* method getTileVec
      * Converts a tile grid into a simple Vector of tiles
@@ -99,14 +98,14 @@ public:
      * @param im1: the first image and its details
      * @param im2: the second image and its details
      */
-    void swapImages(ImageAndRotation im1, ImageAndRotation im2);
+    void swapImages(ImageAndTile im1, ImageAndTile im2);
 
     /* method updateTile
      * Updates a tile based on the new rotation
      *
-     * @param im The ImageAndRotation struct
+     * @param im The ImageAndTile struct
      */
-    void updateTile(ImageAndRotation im);
+    void updateTile(ImageAndTile im);
 
     /* method toString
      * Creates a string representation of the whole puzzle in the form
@@ -127,6 +126,6 @@ public:
 
 private:
     Grid<Tile> tiles;
-    Map<string,ImageAndRotation> images;
+    Map<string,ImageAndTile> images;
     GWindow gw;
 };

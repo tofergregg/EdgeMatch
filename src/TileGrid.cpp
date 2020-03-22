@@ -55,7 +55,9 @@ void TileGrid::loadImages(string imageDir) {
             GImage *img = new GImage(imageDir + "/" + sideStr + ".png");
             // scale to 200px x 200px
             img->setSize(TILE_PIXEL_DIM,TILE_PIXEL_DIM);
-            images.add(sideStr,{img,0,sideStr});
+            // rotate to tile rotation
+            img->rotate(90 * tiles[r][c].getOrientation());
+            images.add(sideStr,{img, tiles[r][c]});
         }
     }
 }
@@ -78,12 +80,12 @@ Grid<Tile> &TileGrid::getGrid() {
 void TileGrid::placeTile(Tile &tile, int row, int col) {
     // rotate
     GImage *im = images[tile.sidesStr()].im;
-    int curr_orientation = images[tile.sidesStr()].orientation;
+    int curr_orientation = images[tile.sidesStr()].tile.getOrientation();
     // rotate back to normal
     im->rotate(90 * -curr_orientation);
     // rotate to new position
     im->rotate(90 * tile.getOrientation());
-    images[tile.sidesStr()] = {im,tile.getOrientation(),tile.sidesStr()};
+    images[tile.sidesStr()] = {im,tile};
     // rotation is counterclockwise about the top left corner for an image, so
     // we need to translate the coordinates appropriately. Some of the
     // translations are odd (swapping x and y, for instance)
@@ -143,18 +145,18 @@ Vector<Tile> TileGrid::getTileVec() {
     return v;
 }
 
-Map<string,ImageAndRotation> & TileGrid::getImages() {
+Map<string,ImageAndTile> & TileGrid::getImages() {
     return images;
 }
 
-void TileGrid::swapImages(ImageAndRotation im1, ImageAndRotation im2) {
+void TileGrid::swapImages(ImageAndTile im1, ImageAndTile im2) {
    int t1R = 0, t1C = 0, t2R = 0, t2C = 0;
    for (int r=0; r < tiles.numRows(); r++) {
        for (int c=0; c < tiles.numCols(); c++) {
-           if (tiles[r][c].sidesStr() == im1.sidesStr) {
+           if (tiles[r][c].sidesStr() == im1.tile.sidesStr()) {
                t1R = r;
                t1C = c;
-           } else if (tiles[r][c].sidesStr() == im2.sidesStr) {
+           } else if (tiles[r][c].sidesStr() == im2.tile.sidesStr()) {
                t2R = r;
                t2C = c;
            }
@@ -165,10 +167,10 @@ void TileGrid::swapImages(ImageAndRotation im1, ImageAndRotation im2) {
    tiles[t2R][t2C] = temp;
 }
 
-void TileGrid::updateTile(ImageAndRotation im) {
+void TileGrid::updateTile(ImageAndTile im) {
    for (Tile &t : tiles) {
-       if (t.sidesStr() == im.sidesStr) {
-           t.setOrientation(im.orientation);
+       if (t.sidesStr() == im.tile.sidesStr()) {
+           t.setOrientation(im.tile.getOrientation());
            break;
        }
    }

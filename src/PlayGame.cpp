@@ -84,14 +84,14 @@ void PlayGame::mouseDragged(GMouseEvent e, TileGrid &tg) {
         im = currIm;
     } else {
         // find image that was clicked
-        Map<string,ImageAndRotation> images = tg.getImages();
+        Map<string,ImageAndTile> images = tg.getImages();
         for (string s : images) {
             GImage *possibleIm = images[s].im;
-            if (fixedContains(possibleIm,images[s].orientation,{e.getX(),e.getY()})) {
+            if (fixedContains(possibleIm,images[s].tile.getOrientation(),{e.getX(),e.getY()})) {
                 //cout << "Found image!" << endl;
                 currIm = possibleIm;
                 im = possibleIm;
-                currImOrientation = images[s].orientation;
+                currImOrientation = images[s].tile.getOrientation();
                 origImCenterLoc = fixedGetCenterLocation(im,currImOrientation);
                 //origImCenterLoc = im->getCenterLocation();
                 break;
@@ -124,7 +124,7 @@ void PlayGame::finishDrag(TileGrid &tg) {
     GImage *closestImg = nullptr;
     int closestOrientation = 0;
     double closestDist = 0.0;
-    Map<string,ImageAndRotation> &images = tg.getImages();
+    Map<string,ImageAndTile> &images = tg.getImages();
     for (string s : images) {
         double distToImage;
         GImage *possibleIm = images[s].im;
@@ -133,19 +133,19 @@ void PlayGame::finishDrag(TileGrid &tg) {
             //distToImage = dist(currIm->getCenterLocation(),origImCenterLoc);
         } else {
             distToImage = dist(fixedGetCenterLocation(currIm,currImOrientation),
-                               fixedGetCenterLocation(possibleIm,images[s].orientation));
+                               fixedGetCenterLocation(possibleIm,images[s].tile.getOrientation()));
             //distToImage = dist(currIm->getCenterLocation(),possibleIm->getCenterLocation());
         }
         if (closestImg) {
             if (closestDist > distToImage) {
                 closestDist = distToImage;
                 closestImg = possibleIm;
-                closestOrientation = images[s].orientation;
+                closestOrientation = images[s].tile.getOrientation();
             }
         } else {
             closestDist = distToImage;
             closestImg = possibleIm;
-            closestOrientation = images[s].orientation;
+            closestOrientation = images[s].tile.getOrientation();
         }
 
     }
@@ -178,17 +178,17 @@ void PlayGame::rotateImage(GMouseEvent e, TileGrid &tg) {
     // the user clicked
     // rotate 90 degrees clockwise
     // find image that was clicked
-    Map<string,ImageAndRotation> &images = tg.getImages();
+    Map<string,ImageAndTile> &images = tg.getImages();
     for (string s : images) {
         GImage *im = images[s].im;
-        if (fixedContains(im, images[s].orientation,{e.getX(),e.getY()})) {
+        if (fixedContains(im, images[s].tile.getOrientation(),{e.getX(),e.getY()})) {
             // rotate back to 0
             GPoint currCenterLoc = im->getCenterLocation();
-            im->rotate(90 * -images[s].orientation);
+            im->rotate(90 * -images[s].tile.getOrientation());
             // now rotate 90 degrees clockwise from original
-            im->rotate(90 * ((images[s].orientation + 1) % NUMSIDES));
-            images[s].orientation = (images[s].orientation + 1) % NUMSIDES;
-            //           fixedSetCenterLocation(im,images[s].orientation,currCenterLoc);
+            im->rotate(90 * ((images[s].tile.getOrientation() + 1) % NUMSIDES));
+            images[s].tile.setOrientation((images[s].tile.getOrientation() + 1) % NUMSIDES);
+            //           fixedSetCenterLocation(im,images[s].tile.getOrientation(),currCenterLoc);
             im->setCenterLocation(currCenterLoc.getY(),-currCenterLoc.getX());
             tg.updateTile(images[s]);
             break;
