@@ -42,7 +42,7 @@ bool PlayGame::handleMouseEvent(Puzzle& puzzle, GMouseEvent e) {
     } else if (etype == MOUSE_RELEASED) {
         mouseReleased(e, puzzle);
         // check to see if game is solved
-        Grid<Tile>& tiles = puzzle.gepuzzlerid();
+        Grid<Tile>& tiles = puzzle.getGrid();
         if (allMatch(tiles)) {
             cout << "Solution: " << endl;
             cout << puzzle.toString() << endl;

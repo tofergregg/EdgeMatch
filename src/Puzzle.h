@@ -55,12 +55,12 @@ class Puzzle {
      */
     void placeTile(Tile& tile, int row, int col);
 
-    /* method gepuzzlerid
+    /* method getGrid
      * Returns a reference to the internal grid of tiles
      *
      * @return The reference to the internal grid of tiles
      */
-    Grid<Tile>& gepuzzlerid();
+    Grid<Tile>& getGrid();
 
     /* method saveGrid
      * Saves the puzzle to a file

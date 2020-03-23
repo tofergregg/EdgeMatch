@@ -178,6 +178,6 @@ You have to write three functions in the `edge-match.cpp` file. There are other 
 </tr>
 <tr>
     <td>`void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions)`</td>
-    <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that.</td>
+    <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the `puzzle` parameter, which is an instance of the `Puzzle` class, and contains images of the current puzzle. </td>
 </tr>
 
