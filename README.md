@@ -177,7 +177,7 @@ You have to write three functions in the `edge-match.cpp` file. There are other 
     <td>This is the recursive puzzle solver function. The `tileVec` parameter is a `Vector` of tiles that you can use for backtracking. The `tiles` param is an initially blank `Grid` of tiles that you can populate with the tiles from `tileVec` to check whether your backtracking is headed towards a correct solution. The `row` and `col` parameters provide the current location, and the first time the function is called they will both be `0`. Finally, the `solutions` parameter is a `Vector` of `Grid` of tiles correct solutions that you should populate as you find correct solutions.</td>
 </tr>
 <tr>
-    <td>`void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions)`</td>
+    <td>`void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions)`</td>
     <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that.</td>
 </tr>
 
