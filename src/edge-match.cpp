@@ -82,7 +82,11 @@ Vector<Grid<Tile>> solvePuzzle(TileGrid& tg) {
 }
 
 /* function findAllSolutions (recursive)
- *
+ * @param tileVec Vector of tiles, used for populating a grid for backtracking
+ * @param tiles Grid of tiles, used to hold a puzzle of tiles, and for checking solutions
+ * @param row The current row we are analyzing
+ * @param col The current column we are analyzing
+ * @param solutions A Vector of tile grids that will hold all solutions
  */
 void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
                       int col, Vector<Grid<Tile>>& solutions) {
@@ -138,94 +142,38 @@ void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
     }
 }
 
-/* function solvePuzzle (recursive)
- * @param elements Vector of tiles, used for populating a grid for backtracking
- * @param row The current row we are analyzing
- * @param col The current column we are analyzing
- * @param tg A reference to a TileGrid instance
- * @param solutions A Vector of tile grids that will hold all solutions
- * @param timeIt true if the puzzle solution is being timed, false if not
+/* function displayAndSaveSolutions
+ * This function displays one solution at a time and asks the user
+ * if they want to save the solution. If the user does want to
+ * save the solution, calls the saveGrid() function of tg with the
+ * user supplied filename.
+ *
+ * @param tg A TileGrid object
+ * @param solutions The vector of all solutions
  */
-void solvePuzzle(Vector<Tile>& tileVec, int row, int col, TileGrid& tg,
-                 Vector<Grid<Tile>>& solutions, bool timeIt) {
-    Grid<Tile>& tiles = tg.getGrid();
-    if (tileVec.size() == 0) {
-        // found potential solution
-        if (!timeIt) {
-            tg.drawTiles();
-        }
+void displayAndSaveSolutions(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
+    for (Grid<Tile> tiles : solutions) {
+        tg.replaceGrid(tiles);
+        cout << tg.toString() << endl;
 
-        bool matched = allMatch(tiles);
-        if (matched) {
-            if (!timeIt) {
-                cout << "Found a match:" << endl;
-                cout << tg.toString() << endl << endl;
-            }
-
-            solutions.add(tiles);
-
-            if (!timeIt) {
-                string filename =
-                    getLine("Please type a file name to save, or <enter> "
-                            "to continue without saving.");
-                if (filename != "") {
-                    if (tg.saveGrid(filename)) {
-                        cout << "'" << filename << "'"
-                             << " saved.";
-                    } else {
-                        cout << "Could not open file for saving.";
-                    }
-                }
-                cout << endl;
-            }
-        }
-    } else {
-        // for each tile in the vector, remove the tile, and put it at the
-        // current position
-        int newCol = col + 1;
-        int newRow = row;
-        if (newCol == tiles.numCols()) {
-            newCol = 0;
-            newRow++;
-        }
-        for (int i = 0; i < tileVec.size(); i++) {
-            for (int orientation = 0; orientation < 4; orientation++) {
-                // add to grid
-                Tile t = tileVec[i];
-                Tile origTile = tiles[row][col];
-                int origOrientation = t.getOrientation();
-                t.setOrientation(orientation);
-                tileVec.remove(i);
-                tiles[row][col] = t;
-
-                // recurse otherwise because we will never find a match
-                bool canRecurse = true;
-
-                if (tiles.inBounds(row - 1, col) &&
-                    !tiles[row][col].isMatched(tiles[row - 1][col],
-                                               Tile::ABOVE)) {
-                    canRecurse = false;
-                }
-
-                if (tiles.inBounds(row, col - 1) &&
-                    !tiles[row][col].isMatched(tiles[row][col - 1],
-                                               Tile::LEFT)) {
-                    canRecurse = false;
-                }
-                if (canRecurse) {
-                    solvePuzzle(tileVec, newRow, newCol, tg, solutions, timeIt);
-                }
-
-                // re-orient and replace
-                t.setOrientation(origOrientation);
-                tileVec.insert(i, t);
-                tiles[row][col] = origTile;
+        string filename =
+            getLine("Please type a file name to save, or <enter> to "
+                    "continue without saving.");
+        if (filename != "") {
+            if (tg.saveGrid(filename)) {
+                cout << "'" << filename << "'"
+                     << " saved.";
+            } else {
+                cout << "Could not open file for saving.";
             }
         }
     }
 }
 
-/* Feel free to investigate the functions below, but you should not modify them
+/* Feel free to investigate the functions below, but you should not modify them */
+
+/* function init
+ * Initializes the board, and runs the program loop.
  */
 void init() {
     while (1) {
@@ -267,6 +215,12 @@ void init() {
     cout << "Thank you for plaing the tile match game!" << endl;
 }
 
+/* function solveAndTimePuzzle
+ * Times how long it takes to find solutions, and prints out all solutions
+ *
+ * @param tg The TileGrid object
+ * @param solutions A vector of all solutions
+ */
 void solveAndTimePuzzle(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
     Timer t;
     getLine("Press <enter> to start searching for solutions.");
@@ -281,6 +235,12 @@ void solveAndTimePuzzle(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
     cout << "Found " << solutions.size() << " solutions:" << endl;
 }
 
+/* function loadPuzzle
+ * Finds all puzzles and lets the user choose one.
+ *
+ * @param tg The TileGrid object
+ * @return True if a puzzle was successfully loaded, false otherwise
+ */
 bool loadPuzzle(TileGrid& tg) {
     // list puzzle directories
     int i = 0;
@@ -336,6 +296,12 @@ bool loadPuzzle(TileGrid& tg) {
     return true;
 }
 
+/* function manualPlay
+ * Asks the user if they want to play manually, and then creates a PlayGame
+ * instance to play the game.
+ *
+ * @param tg The TileGrid object
+ */
 void manualPlay(TileGrid& tg, bool& donePlayingManually) {
     string response =
         getLine("Would you like to play the game manually (y/N)? ");
@@ -352,21 +318,3 @@ void manualPlay(TileGrid& tg, bool& donePlayingManually) {
     }
 }
 
-void displayAndSaveSolutions(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
-    for (Grid<Tile> tiles : solutions) {
-        tg.replaceGrid(tiles);
-        cout << tg.toString() << endl;
-
-        string filename =
-            getLine("Please type a file name to save, or <enter> to "
-                    "continue without saving.");
-        if (filename != "") {
-            if (tg.saveGrid(filename)) {
-                cout << "'" << filename << "'"
-                     << " saved.";
-            } else {
-                cout << "Could not open file for saving.";
-            }
-        }
-    }
-}

@@ -29,7 +29,7 @@ You will turn in the following files:
 
 The Edge-Matching puzzles we will look at are 3x3 square tile puzzles where each tile can be in any of four positions on the board, and in any of the nine available positions. The user can play the game manually with the mouse, or they can solve the puzzles in one of two ways: either timed or one-at-a-time. If the game is played manually, clicking on a tile will rotate it one position clockwise, and dragging a tile on top of another tile will swap the two tiles and retain their current orientation. When the player solves the game, a message alert appears to congratulate the player.
 
-When the user decides to time the solutions, all solutions are found at once, and an overall time to find all the solutions is shown. When the user decides to find the solutions one at a time, each solution is found and displayed, and the user has the choice to save the solution in a form that can be re-loaded later.
+When the user decides to find the solutions, all solutions are found at once, and an overall time to find all the solutions is shown. The user can then choose to see the solutions one at a time. Each solution is then found and displayed, and the user has the choice to save the solution in a form that can be re-loaded later.
 
 When the program begins, the user is given a choice of which puzzle they want to play. The available puzzles have been curated from a number of sources -- some are actual photographs of vintage games, and some are computer-generated. After choosing a puzzle, the player gets to further choose a starting orientation. Some puzzles have solved orientations, and others have almost-solved starting orientations.
 
@@ -47,7 +47,7 @@ The console window also shows the beginning layout and orientation of the tiles.
 Playing Manually<p>
 </center>
 
-Once the player is done trying to solve the puzzle manually, typing any key on the keyboard will produce another menu to allow timed or single solutions:
+Once the player is done trying to solve the puzzle manually, typing any key on the keyboard will produce another menu to begin finding solutions:
 
 <center>
 <td><img alt = "Timed Solution" src="https://web.stanford.edu/~cgregg/EdgeMatch/timed-solution.png" style="width: 100%;"></td><br>
