@@ -118,7 +118,9 @@ class Puzzle {
     string toString();
 
     /* method replaceGrid
-     * Replaces the current grid of tiles with all new tiles
+     * Replaces the current grid of tiles with all new tiles and
+     * re-draws the puzzle. The new tiles must be part of the
+
      *
      * @param newTiles The grid of new tiles
      */

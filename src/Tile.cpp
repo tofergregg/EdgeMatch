@@ -82,8 +82,6 @@ bool Tile::isMatched(Tile& other, Connection otherLocation) {
     }
 }
 
-bool operator<(Tile a, Tile b) { return a.sidesStr() < b.sidesStr(); }
-
 ostream& operator<<(ostream& out, Tile const& tile) {
     // prints as follows:
     // A B C D 0

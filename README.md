@@ -114,6 +114,13 @@ You will write code in the following two files. We will describe them in detail 
 1. **`Tile.cpp`**, the code for describing a tile.
 2. **`edge-match.cpp`**, the code that runs the game and solves the puzzles.
 
+We have provided two other classes for you:
+
+1. **`PlayGame`**, a class that allows the user to play the game by clicking and dragging tiles. You will not have to interface with the `PlayGame` class, though you are welcome to investigate its methods.
+2. **`Puzzle`**, a class that holds images and a `Grid` of tiles. You will have to interface with this in one function in `edge-match.cpp`.
+
+Note that we have decomposed the program such that the the `Tile` class does not have information about images related to a puzzle, and simply defines a tile as described in [Puzzle Notation](#puzzle-notation). The `Puzzle` class has the (somewhat messy) image manipulation functions that are not necessary for the `Tile` class.
+
 # `Tile.h` and `Tile.cpp`
 
 As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to describe a tile such that it can be used to solve puzzles. `Tile.h` and `Tile.cpp` are the files that define and implement a tile description in a C++ class, respectively. `Tile.h` has been commented heavily so that you know what each function is supposed to do, and we expand on that documentation here. We have written the _default_ constructor for the class for you, but you are responsible for writing the constructor that takes a `std::string` as a parameter, and you are also responsible for the five remaining functions (some are only one-liners). Although you are not required to do so, you may add _private_ functions and class variables to the class, but you _may not_ change the _public_ functions. Do not change any of the method signatures, either (i.e., don't change the parameters). In other words: someone else using the `Tile` class should be able to drop your `Tile.h` and `Tile.cpp` files into their own code and use it without any changes to their other code.
@@ -121,7 +128,7 @@ As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to
 <table>
 <tr><th>`Tile` method</th><th>Description</th></tr>
 <tr>
-    <td style="width: 30%;">`Tile()`</td>
+    <td style="width: 40%;">`Tile()`</td>
     <td>The default constructor. We have written this for you. This creates a `Tile` instance with default values. You should not need to use the default constructor, but it is necessary so we can create a `Grid` of tiles.</td>
 </tr>
 <tr>
@@ -165,10 +172,11 @@ As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to
 
 # `edge-match.cpp`
 You have to write three functions in the `edge-match.cpp` file. There are other functions in the file that you can investigate, but you should not change any of them.
+
 <table>
 <tr><th>Function</th><th>Description</th></tr>
 <tr>
-    <td style="width: 30%;">`bool allMatch(Grid<Tile>& tiles`</td>
+    <td style="width: 40%;">`bool allMatch(Grid<Tile>& tiles`</td>
     <td>Determines if the tiles form a matching solution to the puzzle. `true` if the puzzle is solved, `false` otherwise.</td>
 </tr>
 <tr>
@@ -178,6 +186,6 @@ You have to write three functions in the `edge-match.cpp` file. There are other 
 </tr>
 <tr>
     <td>`void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions)`</td>
-    <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the `puzzle` parameter, which is an instance of the `Puzzle` class, and contains images of the current puzzle. </td>
+    <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the `puzzle` parameter, which is an instance of the `Puzzle` class, and contains images of the current puzzle. You should only need the `replaceGrid()` and `saveGrid()` functions from the `Puzzle` class.</td>
 </tr>
 

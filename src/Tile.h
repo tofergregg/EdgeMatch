@@ -64,7 +64,6 @@ class Tile {
     string sidesStr();
 
     friend ostream& operator<<(ostream& out, Tile const& tile);
-    friend bool operator<(Tile a, Tile b);
 
   private:
     /* class variable orientation

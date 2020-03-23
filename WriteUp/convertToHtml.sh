@@ -18,6 +18,9 @@ preamble_html=$(cat << PREAMBLE_HTML
             border: 1px solid black;
             border-collapse: collapse;
         }
+        code {
+            font-size: 130%;
+        }
         </style>
     </head>
     <body>

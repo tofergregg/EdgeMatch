@@ -15,6 +15,9 @@
             border: 1px solid black;
             border-collapse: collapse;
         }
+        code {
+            font-size: 130%;
+        }
         </style>
     </head>
     <body>
@@ -119,6 +122,12 @@ a B C d 0</code></pre>
 <li><strong><code>Tile.cpp</code></strong>, the code for describing a tile.</li>
 <li><strong><code>edge-match.cpp</code></strong>, the code that runs the game and solves the puzzles.</li>
 </ol>
+<p>We have provided two other classes for you:</p>
+<ol type="1">
+<li><strong><code>PlayGame</code></strong>, a class that allows the user to play the game by clicking and dragging tiles. You will not have to interface with the <code>PlayGame</code> class, though you are welcome to investigate its methods.</li>
+<li><strong><code>Puzzle</code></strong>, a class that holds images and a <code>Grid</code> of tiles. You will have to interface with this in one function in <code>edge-match.cpp</code>.</li>
+</ol>
+<p>Note that we have decomposed the program such that the the <code>Tile</code> class does not have information about images related to a puzzle, and simply defines a tile as described in <a href="#puzzle-notation">Puzzle Notation</a>. The <code>Puzzle</code> class has the (somewhat messy) image manipulation functions that are not necessary for the <code>Tile</code> class.</p>
 <h1 id="tile.h-and-tile.cpp"><code>Tile.h</code> and <code>Tile.cpp</code></h1>
 <p>As we described in <a href="#puzzle-notation">Puzzle Notation</a>, we have devised a way to describe a tile such that it can be used to solve puzzles. <code>Tile.h</code> and <code>Tile.cpp</code> are the files that define and implement a tile description in a C++ class, respectively. <code>Tile.h</code> has been commented heavily so that you know what each function is supposed to do, and we expand on that documentation here. We have written the <em>default</em> constructor for the class for you, but you are responsible for writing the constructor that takes a <code>std::string</code> as a parameter, and you are also responsible for the five remaining functions (some are only one-liners). Although you are not required to do so, you may add <em>private</em> functions and class variables to the class, but you <em>may not</em> change the <em>public</em> functions. Do not change any of the method signatures, either (i.e., don’t change the parameters). In other words: someone else using the <code>Tile</code> class should be able to drop your <code>Tile.h</code> and <code>Tile.cpp</code> files into their own code and use it without any changes to their other code.</p>
 <table>
@@ -131,7 +140,7 @@ Description
 </th>
 </tr>
 <tr>
-<td style="width: 30%;">
+<td style="width: 40%;">
 <code>Tile()</code>
 </td>
 <td>
@@ -220,7 +229,7 @@ A <code>Vector</code> that holds the string values (e.g., <code>A</code>). The <
 </tr>
 </table>
 <h1 id="edge-match.cpp"><code>edge-match.cpp</code></h1>
-You have to write three functions in the <code>edge-match.cpp</code> file. There are other functions in the file that you can investigate, but you should not change any of them.
+<p>You have to write three functions in the <code>edge-match.cpp</code> file. There are other functions in the file that you can investigate, but you should not change any of them.</p>
 <table>
 <tr>
 <th>
@@ -231,7 +240,7 @@ Description
 </th>
 </tr>
 <tr>
-<td style="width: 30%;">
+<td style="width: 40%;">
 <code>bool allMatch(Grid&lt;Tile&gt;&amp; tiles</code>
 </td>
 <td>
@@ -251,7 +260,7 @@ This is the recursive puzzle solver function. The <code>tileVec</code> parameter
 <code>void displayAndSaveSolutions(Puzzle&amp; puzzle, Vector&lt;Grid&lt;Tile&gt;&gt;&amp; solutions)</code>
 </td>
 <td>
-This function loops through all of the solutions in the <code>solutions</code> <code>Vector</code>, prints and displays each one and saves the solution if the user chooses to do that.
+This function loops through all of the solutions in the <code>solutions</code> <code>Vector</code>, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the <code>puzzle</code> parameter, which is an instance of the <code>Puzzle</code> class, and contains images of the current puzzle. You should only need the <code>replaceGrid()</code> and <code>saveGrid()</code> functions from the <code>Puzzle</code> class.
 </td>
 </tr>
         </div>
