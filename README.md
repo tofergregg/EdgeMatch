@@ -142,7 +142,7 @@ As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to
 </tr>
 <tr>
     <td>`string sidesStr() const`</td>
-    <td>Returns a `string` representation of the sides. If the original tile had a representation of `A B a b 0`, then this function simply returns `ABab`. This is used by the `TileGrid` class to enter the tiles into a map with a `string` key.</td>
+    <td>Returns a `string` representation of the sides. If the original tile had a representation of `A B a b 0`, then this function simply returns `ABab`. This is used by the `Puzzle` class to enter the tiles into a map with a `string` key.</td>
 </tr>
 <tr>
     <td>`friend ostream &operator<<(ostream &out, Tile const &tile)`</td>
@@ -164,5 +164,20 @@ As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to
 </table>
 
 # `edge-match.cpp`
-
+You have to write three functions in the `edge-match.cpp` file. There are other functions in the file that you can investigate, but you should not change any of them.
+<table>
+<tr><th>Function</th><th>Description</th></tr>
+<tr>
+    <td style="width: 30%;">`bool allMatch(Grid<Tile>& tiles`</td>
+    <td>Determines if the tiles form a matching solution to the puzzle. `true` if the puzzle is solved, `false` otherwise.</td>
+</tr>
+<tr>
+    <td>`void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
+                      int col, Vector<Grid<Tile>>& solutions)`</td>
+    <td>This is the recursive puzzle solver function. The `tileVec` parameter is a `Vector` of tiles that you can use for backtracking. The `tiles` param is an initially blank `Grid` of tiles that you can populate with the tiles from `tileVec` to check whether your backtracking is headed towards a correct solution. The `row` and `col` parameters provide the current location, and the first time the function is called they will both be `0`. Finally, the `solutions` parameter is a `Vector` of `Grid` of tiles correct solutions that you should populate as you find correct solutions.</td>
+</tr>
+<tr>
+    <td>`void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions)`</td>
+    <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that.</td>
+</tr>
 

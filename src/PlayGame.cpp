@@ -2,7 +2,7 @@
 
 using namespace std;
 
-PlayGame::PlayGame(TileGrid& tg, bool (*allMatch)(Grid<Tile>&),
+PlayGame::PlayGame(Puzzle& tg, bool (*allMatch)(Grid<Tile>&),
                    bool& donePlayingManually) {
     mouseDown = false;
     currIm = nullptr;
@@ -13,7 +13,7 @@ PlayGame::PlayGame(TileGrid& tg, bool (*allMatch)(Grid<Tile>&),
     }
 }
 
-void PlayGame::playGameManually(TileGrid& tg, bool& donePlayingManually) {
+void PlayGame::playGameManually(Puzzle& tg, bool& donePlayingManually) {
     tg.getWindow().requestFocus();
     tg.getWindow().setMouseListener(
         [&tg, &donePlayingManually, this](GEvent e) {
@@ -33,7 +33,7 @@ void PlayGame::playGameManually(TileGrid& tg, bool& donePlayingManually) {
     });
 }
 
-bool PlayGame::handleMouseEvent(TileGrid& tg, GMouseEvent e) {
+bool PlayGame::handleMouseEvent(Puzzle& tg, GMouseEvent e) {
     EventType etype = e.getEventType();
     if (etype == MOUSE_PRESSED) {
         mousePressed(e);
@@ -66,7 +66,7 @@ void PlayGame::mousePressed(GMouseEvent e) {
     mouseDown = true;
 }
 
-void PlayGame::mouseReleased(GMouseEvent e, TileGrid& tg) {
+void PlayGame::mouseReleased(GMouseEvent e, Puzzle& tg) {
     // cout << "mouse released" << endl;
     mouseDown = false;
     if (currIm) {
@@ -78,7 +78,7 @@ void PlayGame::mouseReleased(GMouseEvent e, TileGrid& tg) {
     }
 }
 
-void PlayGame::mouseDragged(GMouseEvent e, TileGrid& tg) {
+void PlayGame::mouseDragged(GMouseEvent e, Puzzle& tg) {
     // cout << "mouse dragged" << endl;
     GImage* im = nullptr;
     if (currIm) {
@@ -121,7 +121,7 @@ void PlayGame::mouseDragged(GMouseEvent e, TileGrid& tg) {
     }
 }
 
-void PlayGame::finishDrag(TileGrid& tg) {
+void PlayGame::finishDrag(Puzzle& tg) {
     GImage* closestImg = nullptr;
     int closestOrientation = 0;
     double closestDist = 0.0;
@@ -162,7 +162,7 @@ void PlayGame::finishDrag(TileGrid& tg) {
             currIm, currImOrientation,
             fixedGetCenterLocation(closestImg, closestOrientation));
         fixedSetCenterLocation(closestImg, closestOrientation, origImCenterLoc);
-        // swap images in TileGrid and the Grid<Tile> &
+        // swap images in Puzzle and the Grid<Tile> &
         // GPoint otherCenter = closestImg->getCenterLocation();
         // closestImg->setCenterLocation(origImCenterLoc);
         // currIm->setCenterLocation(otherCenter);
@@ -179,7 +179,7 @@ void PlayGame::finishDrag(TileGrid& tg) {
     currIm = nullptr;
 }
 
-void PlayGame::rotateImage(GMouseEvent e, TileGrid& tg) {
+void PlayGame::rotateImage(GMouseEvent e, Puzzle& tg) {
     // the user clicked
     // rotate 90 degrees clockwise
     // find image that was clicked
@@ -192,9 +192,9 @@ void PlayGame::rotateImage(GMouseEvent e, TileGrid& tg) {
             GPoint currCenterLoc = im->getCenterLocation();
             im->rotate(90 * -images[s].tile.getOrientation());
             // now rotate 90 degrees clockwise from original
-            im->rotate(90 * ((images[s].tile.getOrientation() + 1) % NUMSIDES));
+            im->rotate(90 * ((images[s].tile.getOrientation() + 1) % 4));
             images[s].tile.setOrientation(
-                (images[s].tile.getOrientation() + 1) % NUMSIDES);
+                (images[s].tile.getOrientation() + 1) % 4);
             //           fixedSetCenterLocation(im,images[s].tile.getOrientation(),currCenterLoc);
             im->setCenterLocation(currCenterLoc.getY(), -currCenterLoc.getX());
             tg.updateTile(images[s]);

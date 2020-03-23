@@ -220,6 +220,39 @@ A <code>Vector</code> that holds the string values (e.g., <code>A</code>). The <
 </tr>
 </table>
 <h1 id="edge-match.cpp"><code>edge-match.cpp</code></h1>
+You have to write three functions in the <code>edge-match.cpp</code> file. There are other functions in the file that you can investigate, but you should not change any of them.
+<table>
+<tr>
+<th>
+Function
+</th>
+<th>
+Description
+</th>
+</tr>
+<tr>
+<td style="width: 30%;">
+<code>bool allMatch(Grid&lt;Tile&gt;&amp; tiles</code>
+</td>
+<td>
+Determines if the tiles form a matching solution to the puzzle. <code>true</code> if the puzzle is solved, <code>false</code> otherwise.
+</td>
+</tr>
+<tr>
+<td>
+<code>void findAllSolutions(Vector&lt;Tile&gt;&amp; tileVec, Grid&lt;Tile&gt;&amp; tiles, int row,                       int col, Vector&lt;Grid&lt;Tile&gt;&gt;&amp; solutions)</code>
+</td>
+<td>
+This is the recursive puzzle solver function. The <code>tileVec</code> parameter is a <code>Vector</code> of tiles that you can use for backtracking. The <code>tiles</code> param is an initially blank <code>Grid</code> of tiles that you can populate with the tiles from <code>tileVec</code> to check whether your backtracking is headed towards a correct solution. The <code>row</code> and <code>col</code> parameters provide the current location, and the first time the function is called they will both be <code>0</code>. Finally, the <code>solutions</code> parameter is a <code>Vector</code> of <code>Grid</code> of tiles correct solutions that you should populate as you find correct solutions.
+</td>
+</tr>
+<tr>
+<td>
+<code>&lt;/td&gt;     &lt;td&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt;     &lt;td&gt;</code>
+</td>
+<td>
+</td>
+</tr>
         </div>
     </body>
 </html>

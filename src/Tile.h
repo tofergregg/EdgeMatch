@@ -4,8 +4,6 @@
 
 using namespace std;
 
-const int NUMSIDES = 4;
-
 class Tile {
   public:
     /* enum Connection

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TileGrid.h"
+#include "Puzzle.h"
 #include "vector.h"
 
 #include "gconsolewindow.h"
@@ -17,7 +17,7 @@ using namespace std;
 
 class PlayGame {
   public:
-    PlayGame(TileGrid& tg, bool (*allMatch)(Grid<Tile>&),
+    PlayGame(Puzzle& tg, bool (*allMatch)(Grid<Tile>&),
              bool& donePlayingManually);
 
   private:
@@ -28,16 +28,16 @@ class PlayGame {
     int currImOrientation;
     bool (*allMatch)(Grid<Tile>&);
 
-    bool handleMouseEvent(TileGrid& tg, GMouseEvent e);
+    bool handleMouseEvent(Puzzle& tg, GMouseEvent e);
     void mousePressed(GMouseEvent e);
-    void mouseReleased(GMouseEvent e, TileGrid& tg);
-    void finishDrag(TileGrid& tg);
-    void mouseDragged(GMouseEvent e, TileGrid& tg);
-    void rotateImage(GMouseEvent e, TileGrid& tg);
+    void mouseReleased(GMouseEvent e, Puzzle& tg);
+    void finishDrag(Puzzle& tg);
+    void mouseDragged(GMouseEvent e, Puzzle& tg);
+    void rotateImage(GMouseEvent e, Puzzle& tg);
     GPoint getCenter(GRectangle rect);
     double dist(GPoint a, GPoint b);
     bool fixedContains(GImage* im, int rotation, GPoint loc);
     GPoint fixedGetCenterLocation(GImage* im, int orientation);
     void fixedSetCenterLocation(GImage* im, int orientation, GPoint loc);
-    void playGameManually(TileGrid& tg, bool& donePlayingManually);
+    void playGameManually(Puzzle& tg, bool& donePlayingManually);
 };

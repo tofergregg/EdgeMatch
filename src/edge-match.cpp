@@ -8,22 +8,22 @@
 
 #include "PlayGame.h"
 #include "Tile.h"
-#include "TileGrid.h"
+#include "Puzzle.h"
 
 using namespace std;
 
 void init();
 bool allMatch(Grid<Tile>& tiles);
 void populateGrid(Grid<Tile>& tiles, Vector<Tile>& tileVec);
-Vector<Grid<Tile>> solvePuzzle(TileGrid& tg);
+Vector<Grid<Tile>> solvePuzzle(Puzzle& tg);
 void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
                       int col, Vector<Grid<Tile>>& solutions);
-void solvePuzzle(Vector<Tile>& tileVec, int row, int col, TileGrid& tg,
+void solvePuzzle(Vector<Tile>& tileVec, int row, int col, Puzzle& tg,
                  Vector<Grid<Tile>>& solutions, bool timeIt);
-bool loadPuzzle(TileGrid& tg);
-void manualPlay(TileGrid& tg, bool& donePlayingManually);
-void solveAndTimePuzzle(TileGrid& tg, Vector<Grid<Tile>>& solutions);
-void displayAndSaveSolutions(TileGrid& tg, Vector<Grid<Tile>>& solutions);
+bool loadPuzzle(Puzzle& tg);
+void manualPlay(Puzzle& tg, bool& donePlayingManually);
+void solveAndTimePuzzle(Puzzle& tg, Vector<Grid<Tile>>& solutions);
+void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions);
 
 // #include <QDir>
 
@@ -38,6 +38,8 @@ int main() {
 }
 
 /* function allMatch
+ * Determines if the puzzle is solved or not
+ *
  * @param tiles A Grid of Tile instances
  * @return true if the puzzle is solved, false if it is not
  */
@@ -68,20 +70,24 @@ bool allMatch(Grid<Tile>& tiles) {
 }
 
 /* function solvePuzzle
- * @param tg A TileGrid object, representing a puzzle
+ * Produces all puzzle solutions. Uses recursive findAllSolutions function
+ *
+ *  @param tg A Puzzle object, representing a puzzle
  * @param timeIt true if the puzzle solution is being timed, false if not
  * @return a vector of solved puzzle grids
  */
-Vector<Grid<Tile>> solvePuzzle(TileGrid& tg) {
+Vector<Grid<Tile>> solvePuzzle(Puzzle& tg) {
     // recursively populate tiles and check solution
     Vector<Grid<Tile>> solutions;
     Vector<Tile> tileVec = tg.getTileVec();
-    // solvePuzzle(tileVec, 0, 0, tg, solutions, timeIt);
-    findAllSolutions(tileVec, tg.getGrid(), 0, 0, solutions);
+    Grid<Tile> gridOfTiles(3, 3);
+    findAllSolutions(tileVec, gridOfTiles, 0, 0, solutions);
     return solutions;
 }
 
 /* function findAllSolutions (recursive)
+ * Recursively finds all puzzle solutions
+ *
  * @param tileVec Vector of tiles, used for populating a grid for backtracking
  * @param tiles Grid of tiles, used to hold a puzzle of tiles, and for checking solutions
  * @param row The current row we are analyzing
@@ -148,10 +154,10 @@ void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
  * save the solution, calls the saveGrid() function of tg with the
  * user supplied filename.
  *
- * @param tg A TileGrid object
+ * @param tg A Puzzle object
  * @param solutions The vector of all solutions
  */
-void displayAndSaveSolutions(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
+void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
     for (Grid<Tile> tiles : solutions) {
         tg.replaceGrid(tiles);
         cout << tg.toString() << endl;
@@ -178,7 +184,7 @@ void displayAndSaveSolutions(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
 void init() {
     while (1) {
         bool donePlayingManually = false;
-        TileGrid tg;
+        Puzzle tg;
         GConsoleWindow::instance()->requestFocus();
         if (!loadPuzzle(tg)) {
             cout << "Could not load puzzle." << endl;
@@ -218,10 +224,10 @@ void init() {
 /* function solveAndTimePuzzle
  * Times how long it takes to find solutions, and prints out all solutions
  *
- * @param tg The TileGrid object
+ * @param tg The Puzzle object
  * @param solutions A vector of all solutions
  */
-void solveAndTimePuzzle(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
+void solveAndTimePuzzle(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
     Timer t;
     getLine("Press <enter> to start searching for solutions.");
     cout << endl;
@@ -238,10 +244,10 @@ void solveAndTimePuzzle(TileGrid& tg, Vector<Grid<Tile>>& solutions) {
 /* function loadPuzzle
  * Finds all puzzles and lets the user choose one.
  *
- * @param tg The TileGrid object
+ * @param tg The Puzzle object
  * @return True if a puzzle was successfully loaded, false otherwise
  */
-bool loadPuzzle(TileGrid& tg) {
+bool loadPuzzle(Puzzle& tg) {
     // list puzzle directories
     int i = 0;
 
@@ -300,9 +306,9 @@ bool loadPuzzle(TileGrid& tg) {
  * Asks the user if they want to play manually, and then creates a PlayGame
  * instance to play the game.
  *
- * @param tg The TileGrid object
+ * @param tg The Puzzle object
  */
-void manualPlay(TileGrid& tg, bool& donePlayingManually) {
+void manualPlay(Puzzle& tg, bool& donePlayingManually) {
     string response =
         getLine("Would you like to play the game manually (y/N)? ");
     if (response != "" && toupper(response[0]) == 'Y') {
