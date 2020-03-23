@@ -198,10 +198,61 @@ You have to write three functions in the `edge-match.cpp` file. There are other 
     <td>`void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions)`</td>
     <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the `puzzle` parameter, which is an instance of the `Puzzle` class, and contains images of the current puzzle. You should only need the `replaceGrid()` and `saveGrid()` functions from the `Puzzle` class.</td>
 </tr>
+</table>
 
 # Development Strategy
 Before you begin writing any code, check out the demo program, and make sure you understand how the program works.
 
 The puzzle notation is important to understanding the functions in the `Tile` class, so spend some time understanding the notation. Think about what two matching tiles would look like next to each other (either vertically or horizontally).
 
-It would be easiest to complete the `Tile` class before writing any other code. To test the code, you 
+It would be easiest to complete the `Tile` class before writing any other code. To test the code, you can uncomment the first line of `main`, which will run the `testTile()` function. The correct output for the function is as follows:
+<pre class="codeblock">
+t1 in display form:
+  a
+A   B
+  b
+
+t2 in display form:
+  C
+a   c
+  B
+
+t1: A a B b 3
+t2: C c B a 0
+
+orientation of t1: 3
+t1 sideStr: AaBb
+
+orientation of t2: 0
+t2 sideStr: CcBa
+setting t2 to have an orientation of 2
+orientation of t2: 2
+t2 sideStr: CcBa
+
+t1: 
+  a
+A   B
+  b
+
+t2: 
+  B
+c   a
+  C
+
+Matches: 
+if t2 is above t1: false
+if t2 is below t1: true
+if t2 is to the left of t1: true
+if t2 is to the right of t1: false
+
+if t1 is above t2: true
+if t1 is below t2: false
+if t1 is to the left of t2: false
+if t1 is to the right of t2: true
+</pre>
+
+After completing the `Tile` class, work on the `allMatch` function in `edge-match.cpp`. If you load an already-completed puzzle and play manually, you can start to drag a piece and let go, and you should get a "You solved the game!" message immediately.
+
+Next, work on the `findAllSolutions` function -- this is likely the most challenging function of the assignment.
+
+Finally, you can complete `displayAndSaveSolutions`, which should not be too difficult.

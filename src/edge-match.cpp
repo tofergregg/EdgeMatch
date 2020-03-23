@@ -20,6 +20,7 @@ void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
                       int col, Vector<Grid<Tile>>& solutions);
 void solvePuzzle(Vector<Tile>& tileVec, int row, int col, Puzzle& puzzle,
                  Vector<Grid<Tile>>& solutions, bool timeIt);
+void testTile();
 bool loadPuzzle(Puzzle& puzzle);
 void manualPlay(Puzzle& puzzle, bool& donePlayingManually);
 void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
@@ -28,44 +29,7 @@ void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
 // #include <QDir>
 
 int main() {
-    Tile t1("A a B b 3");
-    Tile t2("C c B a");
-
-    cout << "t1 in display form:" << endl;
-    cout << t1.displayTileStr() << endl;
-
-    cout << "t2 in display form:" << endl;
-    cout << t2.displayTileStr() << endl;
-
-    cout << "t1: " << t1 << endl;
-    cout << "t2: " << t2 << endl << endl;
-
-    cout << "orientation of t1: " << t1.getOrientation() << endl;
-    cout << "t1 sideStr: " << t1.sidesStr() << endl << endl;
-
-    cout << "orientation of t2: " << t2.getOrientation() << endl;
-    cout << "t2 sideStr: " << t2.sidesStr() << endl;
-    cout << "setting t2 to have an orientation of 2" << endl;
-    t2.setOrientation(2);
-    cout << "orientation of t2: " << t2.getOrientation() << endl;
-    cout << "t2 sideStr: " << t2.sidesStr() << endl << endl;
-
-    cout << "t1: " << t1 << endl;
-    cout << "t2: " << t2 << endl << endl;
-
-    cout << boolalpha;
-    cout << "t2 is above t1: " << t1.isMatched(t2, Tile::ABOVE) << endl;
-    cout << "t2 is below t1: " << t1.isMatched(t2, Tile::BELOW) << endl;
-    cout << "t2 is to the left of t1: " << t1.isMatched(t2, Tile::LEFT) << endl;
-    cout << "t2 is to the right of t1: " << t1.isMatched(t2, Tile::RIGHT) << endl << endl;
-
-    cout << "t1 is above t2: " << t2.isMatched(t1, Tile::ABOVE) << endl;
-    cout << "t1 is below t2: " << t2.isMatched(t1, Tile::BELOW) << endl;
-    cout << "t1 is to the left of t2: " << t2.isMatched(t1, Tile::LEFT) << endl;
-    cout << "t1 is to the right of t2: " << t2.isMatched(t1, Tile::RIGHT) << endl;
-
-    return 0;
-
+    // testTile(); return 0; // uncomment to test the Tile class
     // QDir().setCurrent("EdgeMatch.app/Contents/Resources");
     setConsoleWindowTitle("Tile Match");
     setConsoleSize(600, 600);
@@ -212,6 +176,46 @@ void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
             }
         }
     }
+}
+
+/* Test function for the Tile class */
+void testTile() {
+    Tile t1("A a B b 3");
+    Tile t2("C c B a");
+
+    cout << "t1 in display form:" << endl;
+    cout << t1.displayTileStr() << endl;
+
+    cout << "t2 in display form:" << endl;
+    cout << t2.displayTileStr() << endl;
+
+    cout << "t1: " << t1 << endl;
+    cout << "t2: " << t2 << endl << endl;
+
+    cout << "orientation of t1: " << t1.getOrientation() << endl;
+    cout << "t1 sideStr: " << t1.sidesStr() << endl << endl;
+
+    cout << "orientation of t2: " << t2.getOrientation() << endl;
+    cout << "t2 sideStr: " << t2.sidesStr() << endl;
+    cout << "setting t2 to have an orientation of 2" << endl;
+    t2.setOrientation(2);
+    cout << "orientation of t2: " << t2.getOrientation() << endl;
+    cout << "t2 sideStr: " << t2.sidesStr() << endl << endl;
+
+    cout << "t1: " << endl << t1.displayTileStr() << endl;
+    cout << "t2: " << endl << t2.displayTileStr() << endl;
+
+    cout << "Matches: " << endl;
+    cout << boolalpha;
+    cout << "if t2 is above t1: " << t1.isMatched(t2, Tile::ABOVE) << endl;
+    cout << "if t2 is below t1: " << t1.isMatched(t2, Tile::BELOW) << endl;
+    cout << "if t2 is to the left of t1: " << t1.isMatched(t2, Tile::LEFT) << endl;
+    cout << "if t2 is to the right of t1: " << t1.isMatched(t2, Tile::RIGHT) << endl << endl;
+
+    cout << "if t1 is above t2: " << t2.isMatched(t1, Tile::ABOVE) << endl;
+    cout << "if t1 is below t2: " << t2.isMatched(t1, Tile::BELOW) << endl;
+    cout << "if t1 is to the left of t2: " << t2.isMatched(t1, Tile::LEFT) << endl;
+    cout << "if t1 is to the right of t2: " << t2.isMatched(t1, Tile::RIGHT) << endl;
 }
 
 /* Feel free to investigate the functions below, but you should not modify them */

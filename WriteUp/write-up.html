@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html>
     <head>
         <title>Edge Match: The Pattern Puzzle Solver</title>
+        <meta charset="UTF-8">
         <style>
         .content {
             max-width: 80%;
@@ -18,6 +20,18 @@
         code {
             font-size: 130%;
         }
+      .codeblock {
+        font-size: 130%;
+        spacing-between: 20;
+        border: 1px solid gray;
+        box-shadow: 0.5px 0.5px 10px gray;
+        width: 50%;
+        margin: auto;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        padding: 10px;
+        width: 90%;
+      }
         </style>
     </head>
     <body>
@@ -274,10 +288,58 @@ This is the recursive puzzle solver function. The <code>tileVec</code> parameter
 This function loops through all of the solutions in the <code>solutions</code> <code>Vector</code>, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the <code>puzzle</code> parameter, which is an instance of the <code>Puzzle</code> class, and contains images of the current puzzle. You should only need the <code>replaceGrid()</code> and <code>saveGrid()</code> functions from the <code>Puzzle</code> class.
 </td>
 </tr>
+</table>
 <h1 id="development-strategy">Development Strategy</h1>
 <p>Before you begin writing any code, check out the demo program, and make sure you understand how the program works.</p>
 <p>The puzzle notation is important to understanding the functions in the <code>Tile</code> class, so spend some time understanding the notation. Think about what two matching tiles would look like next to each other (either vertically or horizontally).</p>
-<p>It would be easiest to complete the <code>Tile</code> class before writing any other code. To test the code, you</p>
+It would be easiest to complete the <code>Tile</code> class before writing any other code. To test the code, you can uncomment the first line of <code>main</code>, which will run the <code>testTile()</code> function. The correct output for the function is as follows:
+<pre class="codeblock">
+t1 in display form:
+  a
+A   B
+  b
+
+t2 in display form:
+  C
+a   c
+  B
+
+t1: A a B b 3
+t2: C c B a 0
+
+orientation of t1: 3
+t1 sideStr: AaBb
+
+orientation of t2: 0
+t2 sideStr: CcBa
+setting t2 to have an orientation of 2
+orientation of t2: 2
+t2 sideStr: CcBa
+
+t1: 
+  a
+A   B
+  b
+
+t2: 
+  B
+c   a
+  C
+
+Matches: 
+if t2 is above t1: false
+if t2 is below t1: true
+if t2 is to the left of t1: true
+if t2 is to the right of t1: false
+
+if t1 is above t2: true
+if t1 is below t2: false
+if t1 is to the left of t2: false
+if t1 is to the right of t2: true
+</pre>
+<p>After completing the <code>Tile</code> class, work on the <code>allMatch</code> function in <code>edge-match.cpp</code>. If you load an already-completed puzzle and play manually, you can start to drag a piece and let go, and you should get a “You solved the game!” message immediately.</p>
+<p>Next, work on the <code>findAllSolutions</code> function – this is likely the most challenging function of the assignment.</p>
+<p>Finally, you can complete <code>displayAndSaveSolutions</code>, which should not be too difficult.</p>
         </div>
     </body>
 </html>
