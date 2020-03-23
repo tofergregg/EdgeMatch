@@ -170,9 +170,9 @@ void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
         if (filename != "") {
             if (puzzle.saveGrid(filename)) {
                 cout << "'" << filename << "'"
-                     << " saved.";
+                     << " saved." << endl;
             } else {
-                cout << "Could not open file for saving.";
+                cout << "Could not open file for saving." << endl;
             }
         }
     }

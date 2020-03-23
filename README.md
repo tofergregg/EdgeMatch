@@ -14,7 +14,7 @@ To complete the assignment, you will be using C++ classes, and (as mentioned abo
 
 <center><table>
 <tr>
-<td align="center"><img alt = "Starter Code" src="https://web.stanford.edu/~cgregg/EdgeMatch/download.png" style="width: 64;"><br>Starter Code</td>
+<td align="center"><a href="http://web.stanford.edu/~cgregg/EdgeMatch/EdgeMatch-Starter.zip"><img alt = "Starter Code" src="https://web.stanford.edu/~cgregg/EdgeMatch/download.png" style="width: 64;"><br>Starter Code</a></td>
 <td align="center"><a href="https://web.stanford.edu/~cgregg/EdgeMatch/EdgeMatch-mac.zip"><img alt = "Mac Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/apple.png" style="width: 64;"><br>Mac Demo</a></td>
 <td align="center"><img alt = "Windows Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/microsoft.png" style="width: 64;"><br>Windows Demo</td>
 <td align="center"><img alt = "Linux Demo" src="https://web.stanford.edu/~cgregg/EdgeMatch/tux.png" style="width: 64;"><br>Linux Demo</td>
