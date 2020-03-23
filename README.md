@@ -152,8 +152,18 @@ As we described in [Puzzle Notation](#puzzle-notation), we have devised a way to
     <td>Returns a `string` representation of the sides. If the original tile had a representation of `A B a b 0`, then this function simply returns `ABab`. This is used by the `Puzzle` class to enter the tiles into a map with a `string` key.</td>
 </tr>
 <tr>
+    <td>`displayTileStr()`</td>
+    <td>Returns a string that is a display representation of a tile, with the correct orientation. For example, `A b a B 3` would return a string in the following form, with a newline after the "B":
+```
+  b
+A   a
+  B
+```
+</td>
+</tr>
+<tr>
     <td>`friend ostream &operator<<(ostream &out, Tile const &tile)`</td>
-    <td>Overloads the `<<` operator to print out a representation of a tile, in the original form, e.g., `A B a b 0`</td>
+    <td>Overloads the `<<` operator to print out a representation of a tile, in the original form, but with the current orientation. E.g., `A`\ `B`\ `a`\ `b`\ `0`</td>
 </tr>
 <tr>
 </tr>
@@ -189,3 +199,9 @@ You have to write three functions in the `edge-match.cpp` file. There are other 
     <td>This function loops through all of the solutions in the `solutions` `Vector`, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the `puzzle` parameter, which is an instance of the `Puzzle` class, and contains images of the current puzzle. You should only need the `replaceGrid()` and `saveGrid()` functions from the `Puzzle` class.</td>
 </tr>
 
+# Development Strategy
+Before you begin writing any code, check out the demo program, and make sure you understand how the program works.
+
+The puzzle notation is important to understanding the functions in the `Tile` class, so spend some time understanding the notation. Think about what two matching tiles would look like next to each other (either vertically or horizontally).
+
+It would be easiest to complete the `Tile` class before writing any other code. To test the code, you 

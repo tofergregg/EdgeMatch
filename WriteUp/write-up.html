@@ -189,10 +189,21 @@ Returns a <code>string</code> representation of the sides. If the original tile 
 </tr>
 <tr>
 <td>
+<code>displayTileStr()</code>
+</td>
+<td>
+<p>Returns a string that is a display representation of a tile, with the correct orientation. For example, <code>A b a B 3</code> would return a string in the following form, with a newline after the “B”:</p>
+<pre><code>  b
+A   a
+  B</code></pre>
+</td>
+</tr>
+<tr>
+<td>
 <code>friend ostream &amp;operator&lt;&lt;(ostream &amp;out, Tile const &amp;tile)</code>
 </td>
 <td>
-Overloads the <code>&lt;&lt;</code> operator to print out a representation of a tile, in the original form, e.g., <code>A B a b 0</code>
+Overloads the <code>&lt;&lt;</code> operator to print out a representation of a tile, in the original form, but with the current orientation. E.g., <code>A</code> <code>B</code> <code>a</code> <code>b</code> <code>0</code>
 </td>
 </tr>
 <tr>
@@ -263,6 +274,10 @@ This is the recursive puzzle solver function. The <code>tileVec</code> parameter
 This function loops through all of the solutions in the <code>solutions</code> <code>Vector</code>, prints and displays each one and saves the solution if the user chooses to do that. You will need to use the <code>puzzle</code> parameter, which is an instance of the <code>Puzzle</code> class, and contains images of the current puzzle. You should only need the <code>replaceGrid()</code> and <code>saveGrid()</code> functions from the <code>Puzzle</code> class.
 </td>
 </tr>
+<h1 id="development-strategy">Development Strategy</h1>
+<p>Before you begin writing any code, check out the demo program, and make sure you understand how the program works.</p>
+<p>The puzzle notation is important to understanding the functions in the <code>Tile</code> class, so spend some time understanding the notation. Think about what two matching tiles would look like next to each other (either vertically or horizontally).</p>
+<p>It would be easiest to complete the <code>Tile</code> class before writing any other code. To test the code, you</p>
         </div>
     </body>
 </html>

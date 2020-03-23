@@ -82,6 +82,16 @@ bool Tile::isMatched(Tile& other, Connection otherLocation) {
     }
 }
 
+string Tile::displayTileStr() {
+    string s;
+    int start = (4 - orientation) % 4;
+    s += "  " + sides[start] + "\n";
+    s += sides[(start + 3) % 4];
+    s += "   " + sides[(start + 1) % 4] + "\n";
+    s += "  " + sides[(start + 2) % 4] + "\n";
+    return s;
+}
+
 ostream& operator<<(ostream& out, Tile const& tile) {
     // prints as follows:
     // A B C D 0
