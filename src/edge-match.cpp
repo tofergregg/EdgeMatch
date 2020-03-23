@@ -15,15 +15,15 @@ using namespace std;
 void init();
 bool allMatch(Grid<Tile>& tiles);
 void populateGrid(Grid<Tile>& tiles, Vector<Tile>& tileVec);
-Vector<Grid<Tile>> solvePuzzle(Puzzle& tg);
+Vector<Grid<Tile>> solvePuzzle(Puzzle& puzzle);
 void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
                       int col, Vector<Grid<Tile>>& solutions);
-void solvePuzzle(Vector<Tile>& tileVec, int row, int col, Puzzle& tg,
+void solvePuzzle(Vector<Tile>& tileVec, int row, int col, Puzzle& puzzle,
                  Vector<Grid<Tile>>& solutions, bool timeIt);
-bool loadPuzzle(Puzzle& tg);
-void manualPlay(Puzzle& tg, bool& donePlayingManually);
-void solveAndTimePuzzle(Puzzle& tg, Vector<Grid<Tile>>& solutions);
-void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions);
+bool loadPuzzle(Puzzle& puzzle);
+void manualPlay(Puzzle& puzzle, bool& donePlayingManually);
+void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
+void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
 
 // #include <QDir>
 
@@ -72,14 +72,14 @@ bool allMatch(Grid<Tile>& tiles) {
 /* function solvePuzzle
  * Produces all puzzle solutions. Uses recursive findAllSolutions function
  *
- *  @param tg A Puzzle object, representing a puzzle
+ *  @param puzzle A Puzzle object, representing a puzzle
  * @param timeIt true if the puzzle solution is being timed, false if not
  * @return a vector of solved puzzle grids
  */
-Vector<Grid<Tile>> solvePuzzle(Puzzle& tg) {
+Vector<Grid<Tile>> solvePuzzle(Puzzle& puzzle) {
     // recursively populate tiles and check solution
     Vector<Grid<Tile>> solutions;
-    Vector<Tile> tileVec = tg.getTileVec();
+    Vector<Tile> tileVec = puzzle.getTileVec();
     Grid<Tile> gridOfTiles(3, 3);
     findAllSolutions(tileVec, gridOfTiles, 0, 0, solutions);
     return solutions;
@@ -151,22 +151,22 @@ void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
 /* function displayAndSaveSolutions
  * This function displays one solution at a time and asks the user
  * if they want to save the solution. If the user does want to
- * save the solution, calls the saveGrid() function of tg with the
+ * save the solution, calls the saveGrid() function of puzzle with the
  * user supplied filename.
  *
- * @param tg A Puzzle object
+ * @param puzzle A Puzzle object
  * @param solutions The vector of all solutions
  */
-void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
+void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
     for (Grid<Tile> tiles : solutions) {
-        tg.replaceGrid(tiles);
-        cout << tg.toString() << endl;
+        puzzle.replaceGrid(tiles);
+        cout << puzzle.toString() << endl;
 
         string filename =
             getLine("Please type a file name to save, or <enter> to "
                     "continue without saving.");
         if (filename != "") {
-            if (tg.saveGrid(filename)) {
+            if (puzzle.saveGrid(filename)) {
                 cout << "'" << filename << "'"
                      << " saved.";
             } else {
@@ -184,38 +184,38 @@ void displayAndSaveSolutions(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
 void init() {
     while (1) {
         bool donePlayingManually = false;
-        Puzzle tg;
+        Puzzle puzzle;
         GConsoleWindow::instance()->requestFocus();
-        if (!loadPuzzle(tg)) {
+        if (!loadPuzzle(puzzle)) {
             cout << "Could not load puzzle." << endl;
             return;
         }
 
         cout << "Beginning tiles: " << endl;
-        cout << tg.toString() << endl;
-        manualPlay(tg, donePlayingManually);
+        cout << puzzle.toString() << endl;
+        manualPlay(puzzle, donePlayingManually);
 
         while (!donePlayingManually) {
             std::this_thread::yield();
         }
         GConsoleWindow::instance()->requestFocus();
         Vector<Grid<Tile>> solutions;
-        solveAndTimePuzzle(tg, solutions);
+        solveAndTimePuzzle(puzzle, solutions);
         for (Grid<Tile> tiles : solutions) {
-            tg.replaceGrid(tiles);
-            cout << tg.toString() << endl;
+            puzzle.replaceGrid(tiles);
+            cout << puzzle.toString() << endl;
         }
 
         string seeAllSolutions =
             getLine("Would you like to see all solutions? (Y/n)? ");
         if (seeAllSolutions == "" || tolower(seeAllSolutions[0] == 'y')) {
-            displayAndSaveSolutions(tg, solutions);
+            displayAndSaveSolutions(puzzle, solutions);
         }
 
         string playAgain = getLine("Would you like to play again (Y/n)? ");
         if (playAgain != "" && tolower(playAgain[0]) == 'n')
             break;
-        tg.getWindow().close();
+        puzzle.getWindow().close();
     }
 
     cout << "Thank you for plaing the tile match game!" << endl;
@@ -224,17 +224,17 @@ void init() {
 /* function solveAndTimePuzzle
  * Times how long it takes to find solutions, and prints out all solutions
  *
- * @param tg The Puzzle object
+ * @param puzzle The Puzzle object
  * @param solutions A vector of all solutions
  */
-void solveAndTimePuzzle(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
+void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
     Timer t;
     getLine("Press <enter> to start searching for solutions.");
     cout << endl;
 
     t.start();
 
-    solutions = solvePuzzle(tg);
+    solutions = solvePuzzle(puzzle);
 
     t.stop();
     cout << "Time: " << t.elapsed() << "ms" << endl;
@@ -244,10 +244,10 @@ void solveAndTimePuzzle(Puzzle& tg, Vector<Grid<Tile>>& solutions) {
 /* function loadPuzzle
  * Finds all puzzles and lets the user choose one.
  *
- * @param tg The Puzzle object
+ * @param puzzle The Puzzle object
  * @return True if a puzzle was successfully loaded, false otherwise
  */
-bool loadPuzzle(Puzzle& tg) {
+bool loadPuzzle(Puzzle& puzzle) {
     // list puzzle directories
     int i = 0;
 
@@ -293,11 +293,11 @@ bool loadPuzzle(Puzzle& tg) {
 
     string filename = allowableFiles[response - 1];
 
-    if (!tg.populate(filename, puzzleDir)) {
+    if (!puzzle.populate(filename, puzzleDir)) {
         return false;
     }
-    tg.getWindow().setLocation(0, 0);
-    setConsoleLocation(tg.getWindow().getX() + tg.getWindow().getWidth(), 0);
+    puzzle.getWindow().setLocation(0, 0);
+    setConsoleLocation(puzzle.getWindow().getX() + puzzle.getWindow().getWidth(), 0);
     cout << endl;
     return true;
 }
@@ -306,9 +306,9 @@ bool loadPuzzle(Puzzle& tg) {
  * Asks the user if they want to play manually, and then creates a PlayGame
  * instance to play the game.
  *
- * @param tg The Puzzle object
+ * @param puzzle The Puzzle object
  */
-void manualPlay(Puzzle& tg, bool& donePlayingManually) {
+void manualPlay(Puzzle& puzzle, bool& donePlayingManually) {
     string response =
         getLine("Would you like to play the game manually (y/N)? ");
     if (response != "" && toupper(response[0]) == 'Y') {
@@ -318,7 +318,7 @@ void manualPlay(Puzzle& tg, bool& donePlayingManually) {
         cout << "rotate the piece 90 degrees clockwise." << endl;
         cout << "Press any key on the keyboard to quit manual play mode."
              << endl;
-        PlayGame(tg, allMatch, donePlayingManually);
+        PlayGame(puzzle, allMatch, donePlayingManually);
     } else {
         donePlayingManually = true;
     }

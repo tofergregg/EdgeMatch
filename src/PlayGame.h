@@ -17,7 +17,7 @@ using namespace std;
 
 class PlayGame {
   public:
-    PlayGame(Puzzle& tg, bool (*allMatch)(Grid<Tile>&),
+    PlayGame(Puzzle& puzzle, bool (*allMatch)(Grid<Tile>&),
              bool& donePlayingManually);
 
   private:
@@ -28,16 +28,16 @@ class PlayGame {
     int currImOrientation;
     bool (*allMatch)(Grid<Tile>&);
 
-    bool handleMouseEvent(Puzzle& tg, GMouseEvent e);
+    bool handleMouseEvent(Puzzle& puzzle, GMouseEvent e);
     void mousePressed(GMouseEvent e);
-    void mouseReleased(GMouseEvent e, Puzzle& tg);
-    void finishDrag(Puzzle& tg);
-    void mouseDragged(GMouseEvent e, Puzzle& tg);
-    void rotateImage(GMouseEvent e, Puzzle& tg);
+    void mouseReleased(GMouseEvent e, Puzzle& puzzle);
+    void finishDrag(Puzzle& puzzle);
+    void mouseDragged(GMouseEvent e, Puzzle& puzzle);
+    void rotateImage(GMouseEvent e, Puzzle& puzzle);
     GPoint getCenter(GRectangle rect);
     double dist(GPoint a, GPoint b);
     bool fixedContains(GImage* im, int rotation, GPoint loc);
     GPoint fixedGetCenterLocation(GImage* im, int orientation);
     void fixedSetCenterLocation(GImage* im, int orientation, GPoint loc);
-    void playGameManually(Puzzle& tg, bool& donePlayingManually);
+    void playGameManually(Puzzle& puzzle, bool& donePlayingManually);
 };

@@ -175,7 +175,7 @@ Sets the orientation of the tile.
 <code>string sidesStr() const</code>
 </td>
 <td>
-Returns a <code>string</code> representation of the sides. If the original tile had a representation of <code>A B a b 0</code>, then this function simply returns <code>ABab</code>. This is used by the <code>TileGrid</code> class to enter the tiles into a map with a <code>string</code> key.
+Returns a <code>string</code> representation of the sides. If the original tile had a representation of <code>A B a b 0</code>, then this function simply returns <code>ABab</code>. This is used by the <code>Puzzle</code> class to enter the tiles into a map with a <code>string</code> key.
 </td>
 </tr>
 <tr>
@@ -248,9 +248,10 @@ This is the recursive puzzle solver function. The <code>tileVec</code> parameter
 </tr>
 <tr>
 <td>
-<code>&lt;/td&gt;     &lt;td&gt;&lt;/td&gt; &lt;/tr&gt; &lt;tr&gt;     &lt;td&gt;</code>
+<code>void displayAndSaveSolutions(Puzzle&amp; tg, Vector&lt;Grid&lt;Tile&gt;&gt;&amp; solutions)</code>
 </td>
 <td>
+This function loops through all of the solutions in the <code>solutions</code> <code>Vector</code>, prints and displays each one and saves the solution if the user chooses to do that.
 </td>
 </tr>
         </div>

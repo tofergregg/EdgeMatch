@@ -2,50 +2,50 @@
 
 using namespace std;
 
-PlayGame::PlayGame(Puzzle& tg, bool (*allMatch)(Grid<Tile>&),
+PlayGame::PlayGame(Puzzle& puzzle, bool (*allMatch)(Grid<Tile>&),
                    bool& donePlayingManually) {
     mouseDown = false;
     currIm = nullptr;
     this->allMatch = allMatch;
-    playGameManually(tg, donePlayingManually);
+    playGameManually(puzzle, donePlayingManually);
     while (!donePlayingManually) {
         std::this_thread::yield();
     }
 }
 
-void PlayGame::playGameManually(Puzzle& tg, bool& donePlayingManually) {
-    tg.getWindow().requestFocus();
-    tg.getWindow().setMouseListener(
-        [&tg, &donePlayingManually, this](GEvent e) {
-            if (!handleMouseEvent(tg, e)) {
-                tg.getWindow().removeKeyListener();
-                tg.getWindow().removeMouseListener();
+void PlayGame::playGameManually(Puzzle& puzzle, bool& donePlayingManually) {
+    puzzle.getWindow().requestFocus();
+    puzzle.getWindow().setMouseListener(
+        [&puzzle, &donePlayingManually, this](GEvent e) {
+            if (!handleMouseEvent(puzzle, e)) {
+                puzzle.getWindow().removeKeyListener();
+                puzzle.getWindow().removeMouseListener();
                 donePlayingManually = true;
             }
         });
 
-    tg.getWindow().setKeyListener([&donePlayingManually, &tg](GEvent e) {
+    puzzle.getWindow().setKeyListener([&donePlayingManually, &puzzle](GEvent e) {
         e.ignore();
-        tg.getWindow().removeKeyListener();
-        tg.getWindow().removeMouseListener();
+        puzzle.getWindow().removeKeyListener();
+        puzzle.getWindow().removeMouseListener();
         GConsoleWindow::instance()->requestFocus();
         donePlayingManually = true;
     });
 }
 
-bool PlayGame::handleMouseEvent(Puzzle& tg, GMouseEvent e) {
+bool PlayGame::handleMouseEvent(Puzzle& puzzle, GMouseEvent e) {
     EventType etype = e.getEventType();
     if (etype == MOUSE_PRESSED) {
         mousePressed(e);
     } else if (etype == MOUSE_DRAGGED) {
-        mouseDragged(e, tg);
+        mouseDragged(e, puzzle);
     } else if (etype == MOUSE_RELEASED) {
-        mouseReleased(e, tg);
+        mouseReleased(e, puzzle);
         // check to see if game is solved
-        Grid<Tile>& tiles = tg.getGrid();
+        Grid<Tile>& tiles = puzzle.gepuzzlerid();
         if (allMatch(tiles)) {
             cout << "Solution: " << endl;
-            cout << tg.toString() << endl;
+            cout << puzzle.toString() << endl;
             GOptionPane::ConfirmResult res = GOptionPane::showConfirmDialog(
                 "You solved the game!\n"
                 "Would you like to keep playing?");
@@ -66,26 +66,26 @@ void PlayGame::mousePressed(GMouseEvent e) {
     mouseDown = true;
 }
 
-void PlayGame::mouseReleased(GMouseEvent e, Puzzle& tg) {
+void PlayGame::mouseReleased(GMouseEvent e, Puzzle& puzzle) {
     // cout << "mouse released" << endl;
     mouseDown = false;
     if (currIm) {
         // we must have been dragging
-        finishDrag(tg);
+        finishDrag(puzzle);
     } else {
         // the user clicked
-        rotateImage(e, tg);
+        rotateImage(e, puzzle);
     }
 }
 
-void PlayGame::mouseDragged(GMouseEvent e, Puzzle& tg) {
+void PlayGame::mouseDragged(GMouseEvent e, Puzzle& puzzle) {
     // cout << "mouse dragged" << endl;
     GImage* im = nullptr;
     if (currIm) {
         im = currIm;
     } else {
         // find image that was clicked
-        Map<string, ImageAndTile> images = tg.getImages();
+        Map<string, ImageAndTile> images = puzzle.getImages();
         for (string s : images) {
             GImage* possibleIm = images[s].im;
             if (fixedContains(possibleIm, images[s].tile.getOrientation(),
@@ -121,11 +121,11 @@ void PlayGame::mouseDragged(GMouseEvent e, Puzzle& tg) {
     }
 }
 
-void PlayGame::finishDrag(Puzzle& tg) {
+void PlayGame::finishDrag(Puzzle& puzzle) {
     GImage* closestImg = nullptr;
     int closestOrientation = 0;
     double closestDist = 0.0;
-    Map<string, ImageAndTile>& images = tg.getImages();
+    Map<string, ImageAndTile>& images = puzzle.getImages();
     for (string s : images) {
         double distToImage;
         GImage* possibleIm = images[s].im;
@@ -170,7 +170,7 @@ void PlayGame::finishDrag(Puzzle& tg) {
             if (images[sCurr].im == currIm) {
                 for (string sClosest : images) {
                     if (images[sClosest].im == closestImg) {
-                        tg.swapImages(images[sClosest], images[sCurr]);
+                        puzzle.swapImages(images[sClosest], images[sCurr]);
                     }
                 }
             }
@@ -179,11 +179,11 @@ void PlayGame::finishDrag(Puzzle& tg) {
     currIm = nullptr;
 }
 
-void PlayGame::rotateImage(GMouseEvent e, Puzzle& tg) {
+void PlayGame::rotateImage(GMouseEvent e, Puzzle& puzzle) {
     // the user clicked
     // rotate 90 degrees clockwise
     // find image that was clicked
-    Map<string, ImageAndTile>& images = tg.getImages();
+    Map<string, ImageAndTile>& images = puzzle.getImages();
     for (string s : images) {
         GImage* im = images[s].im;
         if (fixedContains(im, images[s].tile.getOrientation(),
@@ -197,7 +197,7 @@ void PlayGame::rotateImage(GMouseEvent e, Puzzle& tg) {
                 (images[s].tile.getOrientation() + 1) % 4);
             //           fixedSetCenterLocation(im,images[s].tile.getOrientation(),currCenterLoc);
             im->setCenterLocation(currCenterLoc.getY(), -currCenterLoc.getX());
-            tg.updateTile(images[s]);
+            puzzle.updateTile(images[s]);
             break;
         }
     }

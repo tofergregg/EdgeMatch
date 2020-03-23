@@ -75,7 +75,7 @@ void Puzzle::drawTiles() {
     }
 }
 
-Grid<Tile>& Puzzle::getGrid() { return tiles; }
+Grid<Tile>& Puzzle::gepuzzlerid() { return tiles; }
 
 void Puzzle::placeTile(Tile& tile, int row, int col) {
     // rotate
