@@ -246,6 +246,7 @@ macx {
     # calling cache() reduces warnings on Mac OS X systems
     cache()
     QMAKE_MAC_SDK = macosx
+    LIBS += -framework CoreFoundation
 }
 
 # additional flags for Linux

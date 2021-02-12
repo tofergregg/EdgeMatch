@@ -26,10 +26,37 @@ void manualPlay(Puzzle& puzzle, bool& donePlayingManually);
 void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
 void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
 
-// #include <QDir>
+#include <QDir>
+#include <corefoundation/CFBundle.h>
+
+QString CFStringToQString(CFStringRef string) {
+    CFRange range = { 0, CFStringGetLength(string) };
+
+    unsigned short *array = new unsigned short[range.length];
+    CFStringGetCharacters(string, range, array);
+
+    // TODO: remove copying and use QString::data()?
+    QString result = QString::fromUtf16(array, range.length);
+
+    delete [] array;
+    return result;
+}
+
+QDir bundle() {
+    // Trolltech provided example
+    CFURLRef appUrlRef = CFBundleCopyBundleURL( CFBundleGetMainBundle() );
+    CFStringRef macPath = CFURLCopyFileSystemPath( appUrlRef, kCFURLPOSIXPathStyle );
+    QString path = CFStringToQString( macPath );
+    CFRelease(appUrlRef);
+    CFRelease(macPath);
+    return QDir( path );
+}
 
 int main() {
-    // testTile(); return 0; // uncomment to test the Tile class
+    // QDir progBundle = bundle();
+    // QDir().setCurrent(progBundle.path() + "/Contents/Resources");
+
+
     // QDir().setCurrent("EdgeMatch.app/Contents/Resources");
     setConsoleWindowTitle("Tile Match");
     setConsoleSize(600, 600);
