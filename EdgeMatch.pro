@@ -1,5 +1,5 @@
 #####################################################################
-## Stanford CS 106 B/X Qt Creator project file                     ##
+## Stanford CS 106 B Qt Creator project file                       ##
 #####################################################################
 #
 # This file specifies the information about your project to Qt Creator.
