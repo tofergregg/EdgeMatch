@@ -21,7 +21,7 @@ Tile::Tile(string s) {
         // we have the optional orientation
         orientation = stringToInteger(parts[4]);
         // remove the orientation from the Vector
-        parts.removeBack();
+        parts.remove(parts.size() - 1);
     } else {
         orientation = 0;
     }
@@ -42,7 +42,7 @@ string Tile::sidesStr() {
     return ss;
 }
 
-bool Tile::isMatched(Tile& other, Connection otherLocation) {
+bool Tile::isMatched(Tile &other, Connection otherLocation) {
     string thisSide, otherSide;
 
     if (otherLocation == Tile::ABOVE) {
@@ -92,7 +92,7 @@ string Tile::displayTileStr() {
     return s;
 }
 
-ostream& operator<<(ostream& out, Tile const& tile) {
+ostream &operator<<(ostream &out, Tile const &tile) {
     // prints as follows:
     // A B C D 0
     // Which means that with an orientation of 0, the piece

@@ -5,6 +5,7 @@
 #include "strlib.h"
 #include "timer.h"
 #include <iostream>
+#include "testing/SimpleTest.h"
 
 #include "PlayGame.h"
 #include "Tile.h"
@@ -53,6 +54,9 @@ QDir bundle() {
 }
 
 int main() {
+    if (runSimpleTests(NO_TESTS)) {
+        return 0;
+    }
     // QDir progBundle = bundle();
     // QDir().setCurrent(progBundle.path() + "/Contents/Resources");
 

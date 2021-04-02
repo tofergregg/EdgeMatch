@@ -54,12 +54,12 @@ void Puzzle::loadImages(string imageDir) {
     for (int r = 0; r < tiles.numRows(); r++) {
         for (int c = 0; c < tiles.numCols(); c++) {
             string sideStr = tiles[r][c].sidesStr();
-            GImage* img = new GImage(imageDir + "/" + sideStr + ".png");
+            GImage *img = new GImage(imageDir + "/" + sideStr + ".png");
             // scale to 200px x 200px
             img->setSize(TILE_PIXEL_DIM, TILE_PIXEL_DIM);
             // rotate to tile rotation
             img->rotate(90 * tiles[r][c].getOrientation());
-            images.add(sideStr, {img, tiles[r][c]});
+            images.put(sideStr, {img, tiles[r][c]});
         }
     }
 }
@@ -75,11 +75,11 @@ void Puzzle::drawTiles() {
     }
 }
 
-Grid<Tile>& Puzzle::getGrid() { return tiles; }
+Grid<Tile> &Puzzle::getGrid() { return tiles; }
 
-void Puzzle::placeTile(Tile& tile, int row, int col) {
+void Puzzle::placeTile(Tile &tile, int row, int col) {
     // rotate
-    GImage* im = images[tile.sidesStr()].im;
+    GImage *im = images[tile.sidesStr()].im;
     int curr_orientation = images[tile.sidesStr()].tile.getOrientation();
     // rotate back to normal
     im->rotate(90 * -curr_orientation);
@@ -108,7 +108,7 @@ void Puzzle::placeTile(Tile& tile, int row, int col) {
     }
 }
 
-GWindow& Puzzle::getWindow() { return gw; }
+GWindow &Puzzle::getWindow() { return gw; }
 
 string Puzzle::toString() {
     // creates a string representing the board in the following form:
@@ -146,7 +146,7 @@ Vector<Tile> Puzzle::getTileVec() {
     return v;
 }
 
-Map<string, ImageAndTile>& Puzzle::getImages() { return images; }
+Map<string, ImageAndTile> &Puzzle::getImages() { return images; }
 
 void Puzzle::swapImages(ImageAndTile im1, ImageAndTile im2) {
     int t1R = 0, t1C = 0, t2R = 0, t2C = 0;
@@ -167,7 +167,7 @@ void Puzzle::swapImages(ImageAndTile im1, ImageAndTile im2) {
 }
 
 void Puzzle::updateTile(ImageAndTile im) {
-    for (Tile& t : tiles) {
+    for (Tile &t : tiles) {
         if (t.sidesStr() == im.tile.sidesStr()) {
             t.setOrientation(im.tile.getOrientation());
             break;
