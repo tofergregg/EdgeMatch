@@ -3,65 +3,34 @@
 #include "grid.h"
 #include "simpio.h"
 #include "strlib.h"
+#include "testing/SimpleTest.h"
 #include "timer.h"
 #include <iostream>
-#include "testing/SimpleTest.h"
 
 #include "PlayGame.h"
-#include "Tile.h"
 #include "Puzzle.h"
+#include "Tile.h"
 
 using namespace std;
 
 void init();
-bool allMatch(Grid<Tile>& tiles);
-void populateGrid(Grid<Tile>& tiles, Vector<Tile>& tileVec);
-Vector<Grid<Tile>> solvePuzzle(Puzzle& puzzle);
-void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
-                      int col, Vector<Grid<Tile>>& solutions);
-void solvePuzzle(Vector<Tile>& tileVec, int row, int col, Puzzle& puzzle,
-                 Vector<Grid<Tile>>& solutions, bool timeIt);
+bool allMatch(Grid<Tile> &tiles);
+void populateGrid(Grid<Tile> &tiles, Vector<Tile> &tileVec);
+Vector<Grid<Tile>> solvePuzzle(Puzzle &puzzle);
+void findAllSolutions(Vector<Tile> &tileVec, Grid<Tile> &tiles, int row,
+                      int col, Vector<Grid<Tile>> &solutions);
+void solvePuzzle(Vector<Tile> &tileVec, int row, int col, Puzzle &puzzle,
+                 Vector<Grid<Tile>> &solutions, bool timeIt);
 void testTile();
-bool loadPuzzle(Puzzle& puzzle);
-void manualPlay(Puzzle& puzzle, bool& donePlayingManually);
-void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
-void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions);
-
-#include <QDir>
-#include <corefoundation/CFBundle.h>
-
-QString CFStringToQString(CFStringRef string) {
-    CFRange range = { 0, CFStringGetLength(string) };
-
-    unsigned short *array = new unsigned short[range.length];
-    CFStringGetCharacters(string, range, array);
-
-    // TODO: remove copying and use QString::data()?
-    QString result = QString::fromUtf16(array, range.length);
-
-    delete [] array;
-    return result;
-}
-
-QDir bundle() {
-    // Trolltech provided example
-    CFURLRef appUrlRef = CFBundleCopyBundleURL( CFBundleGetMainBundle() );
-    CFStringRef macPath = CFURLCopyFileSystemPath( appUrlRef, kCFURLPOSIXPathStyle );
-    QString path = CFStringToQString( macPath );
-    CFRelease(appUrlRef);
-    CFRelease(macPath);
-    return QDir( path );
-}
+bool loadPuzzle(Puzzle &puzzle);
+void manualPlay(Puzzle &puzzle, bool &donePlayingManually);
+void solveAndTimePuzzle(Puzzle &puzzle, Vector<Grid<Tile>> &solutions);
+void displayAndSaveSolutions(Puzzle &puzzle, Vector<Grid<Tile>> &solutions);
 
 int main() {
     if (runSimpleTests(NO_TESTS)) {
         return 0;
     }
-    // QDir progBundle = bundle();
-    // QDir().setCurrent(progBundle.path() + "/Contents/Resources");
-
-
-    // QDir().setCurrent("EdgeMatch.app/Contents/Resources");
     setConsoleWindowTitle("Tile Match");
     setConsoleSize(600, 600);
     cout << "Welcome to the tile match game!" << endl;
@@ -76,7 +45,7 @@ int main() {
  * @param tiles A Grid of Tile instances
  * @return true if the puzzle is solved, false if it is not
  */
-bool allMatch(Grid<Tile>& tiles) {
+bool allMatch(Grid<Tile> &tiles) {
     // only need to check 12 positions, as the rest are overlapping
     int rows = tiles.numRows();
     int cols = tiles.numCols();
@@ -109,7 +78,7 @@ bool allMatch(Grid<Tile>& tiles) {
  * @param timeIt true if the puzzle solution is being timed, false if not
  * @return a vector of solved puzzle grids
  */
-Vector<Grid<Tile>> solvePuzzle(Puzzle& puzzle) {
+Vector<Grid<Tile>> solvePuzzle(Puzzle &puzzle) {
     // recursively populate tiles and check solution
     Vector<Grid<Tile>> solutions;
     Vector<Tile> tileVec = puzzle.getTileVec();
@@ -122,13 +91,14 @@ Vector<Grid<Tile>> solvePuzzle(Puzzle& puzzle) {
  * Recursively finds all puzzle solutions
  *
  * @param tileVec Vector of tiles, used for populating a grid for backtracking
- * @param tiles Grid of tiles, used to hold a puzzle of tiles, and for checking solutions
+ * @param tiles Grid of tiles, used to hold a puzzle of tiles, and for checking
+ * solutions
  * @param row The current row we are analyzing
  * @param col The current column we are analyzing
  * @param solutions A Vector of tile grids that will hold all solutions
  */
-void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
-                      int col, Vector<Grid<Tile>>& solutions) {
+void findAllSolutions(Vector<Tile> &tileVec, Grid<Tile> &tiles, int row,
+                      int col, Vector<Grid<Tile>> &solutions) {
     if (tileVec.size() == 0) {
         // found potential solution
         bool matched = allMatch(tiles);
@@ -190,7 +160,7 @@ void findAllSolutions(Vector<Tile>& tileVec, Grid<Tile>& tiles, int row,
  * @param puzzle A Puzzle object
  * @param solutions The vector of all solutions
  */
-void displayAndSaveSolutions(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
+void displayAndSaveSolutions(Puzzle &puzzle, Vector<Grid<Tile>> &solutions) {
     for (Grid<Tile> tiles : solutions) {
         puzzle.replaceGrid(tiles);
         cout << puzzle.toString() << endl;
@@ -240,16 +210,22 @@ void testTile() {
     cout << boolalpha;
     cout << "if t2 is above t1: " << t1.isMatched(t2, Tile::ABOVE) << endl;
     cout << "if t2 is below t1: " << t1.isMatched(t2, Tile::BELOW) << endl;
-    cout << "if t2 is to the left of t1: " << t1.isMatched(t2, Tile::LEFT) << endl;
-    cout << "if t2 is to the right of t1: " << t1.isMatched(t2, Tile::RIGHT) << endl << endl;
+    cout << "if t2 is to the left of t1: " << t1.isMatched(t2, Tile::LEFT)
+         << endl;
+    cout << "if t2 is to the right of t1: " << t1.isMatched(t2, Tile::RIGHT)
+         << endl
+         << endl;
 
     cout << "if t1 is above t2: " << t2.isMatched(t1, Tile::ABOVE) << endl;
     cout << "if t1 is below t2: " << t2.isMatched(t1, Tile::BELOW) << endl;
-    cout << "if t1 is to the left of t2: " << t2.isMatched(t1, Tile::LEFT) << endl;
-    cout << "if t1 is to the right of t2: " << t2.isMatched(t1, Tile::RIGHT) << endl;
+    cout << "if t1 is to the left of t2: " << t2.isMatched(t1, Tile::LEFT)
+         << endl;
+    cout << "if t1 is to the right of t2: " << t2.isMatched(t1, Tile::RIGHT)
+         << endl;
 }
 
-/* Feel free to investigate the functions below, but you should not modify them */
+/* Feel free to investigate the functions below, but you should not modify them
+ */
 
 /* function init
  * Initializes the board, and runs the program loop.
@@ -300,7 +276,7 @@ void init() {
  * @param puzzle The Puzzle object
  * @param solutions A vector of all solutions
  */
-void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
+void solveAndTimePuzzle(Puzzle &puzzle, Vector<Grid<Tile>> &solutions) {
     Timer t;
     getLine("Press <enter> to start searching for solutions.");
     cout << endl;
@@ -320,7 +296,7 @@ void solveAndTimePuzzle(Puzzle& puzzle, Vector<Grid<Tile>>& solutions) {
  * @param puzzle The Puzzle object
  * @return True if a puzzle was successfully loaded, false otherwise
  */
-bool loadPuzzle(Puzzle& puzzle) {
+bool loadPuzzle(Puzzle &puzzle) {
     // list puzzle directories
     int i = 0;
 
@@ -370,7 +346,8 @@ bool loadPuzzle(Puzzle& puzzle) {
         return false;
     }
     puzzle.getWindow().setLocation(0, 0);
-    setConsoleLocation(puzzle.getWindow().getX() + puzzle.getWindow().getWidth(), 0);
+    setConsoleLocation(
+        puzzle.getWindow().getX() + puzzle.getWindow().getWidth(), 0);
     cout << endl;
     return true;
 }
@@ -381,7 +358,7 @@ bool loadPuzzle(Puzzle& puzzle) {
  *
  * @param puzzle The Puzzle object
  */
-void manualPlay(Puzzle& puzzle, bool& donePlayingManually) {
+void manualPlay(Puzzle &puzzle, bool &donePlayingManually) {
     string response =
         getLine("Would you like to play the game manually (y/N)? ");
     if (response != "" && toupper(response[0]) == 'Y') {
@@ -396,4 +373,3 @@ void manualPlay(Puzzle& puzzle, bool& donePlayingManually) {
         donePlayingManually = true;
     }
 }
-
