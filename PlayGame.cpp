@@ -26,11 +26,11 @@ void PlayGame::playGameManually(Puzzle &puzzle, bool &donePlayingManually) {
 
     puzzle.getWindow().setKeyListener(
         [&donePlayingManually, &puzzle](GEvent e) {
+            donePlayingManually = true;
             e.ignore();
             puzzle.getWindow().removeKeyListener();
             puzzle.getWindow().removeMouseListener();
             GConsoleWindow::instance()->requestFocus();
-            donePlayingManually = true;
         });
 }
 

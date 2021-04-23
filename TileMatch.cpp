@@ -27,10 +27,21 @@ void manualPlay(Puzzle &puzzle, bool &donePlayingManually);
 void solveAndTimePuzzle(Puzzle &puzzle, Vector<Grid<Tile>> &solutions);
 void displayAndSaveSolutions(Puzzle &puzzle, Vector<Grid<Tile>> &solutions);
 
+#include <QCoreApplication>
+#include <QDir>
 int main() {
-    if (runSimpleTests(NO_TESTS)) {
+    // NOTE: this solution requires you to manually put the puzzles folder
+    // into the TileMatchDemo.app/Contents/Resources folder.
+    // If you want to deploy the app, you also need to run
+    // ~/Qt/5.15.2/clang_64/bin/macdeployqt TileMatchDemo.app
+    // if (runSimpleTests(NO_TESTS)) {
+    /*
+    if (runSimpleTests(SELECTED_TESTS)) {
         return 0;
-    }
+    }*/
+
+    // cout << QDir::currentPath().toStdString() << endl;
+    // cout << QCoreApplication::applicationDirPath().toStdString() << endl;
     setConsoleWindowTitle("Tile Match");
     setConsoleSize(600, 600);
     cout << "Welcome to the tile match game!" << endl;
@@ -74,7 +85,7 @@ bool allMatch(Grid<Tile> &tiles) {
 /* function solvePuzzle
  * Produces all puzzle solutions. Uses recursive findAllSolutions function
  *
- *  @param puzzle A Puzzle object, representing a puzzle
+ * @param puzzle A Puzzle object, representing a puzzle
  * @param timeIt true if the puzzle solution is being timed, false if not
  * @return a vector of solved puzzle grids
  */
@@ -179,51 +190,6 @@ void displayAndSaveSolutions(Puzzle &puzzle, Vector<Grid<Tile>> &solutions) {
     }
 }
 
-/* Test function for the Tile class */
-void testTile() {
-    Tile t1("A a B b 3");
-    Tile t2("C c B a");
-
-    cout << "t1 in display form:" << endl;
-    cout << t1.displayTileStr() << endl;
-
-    cout << "t2 in display form:" << endl;
-    cout << t2.displayTileStr() << endl;
-
-    cout << "t1: " << t1 << endl;
-    cout << "t2: " << t2 << endl << endl;
-
-    cout << "orientation of t1: " << t1.getOrientation() << endl;
-    cout << "t1 sideStr: " << t1.sidesStr() << endl << endl;
-
-    cout << "orientation of t2: " << t2.getOrientation() << endl;
-    cout << "t2 sideStr: " << t2.sidesStr() << endl;
-    cout << "setting t2 to have an orientation of 2" << endl;
-    t2.setOrientation(2);
-    cout << "orientation of t2: " << t2.getOrientation() << endl;
-    cout << "t2 sideStr: " << t2.sidesStr() << endl << endl;
-
-    cout << "t1: " << endl << t1.displayTileStr() << endl;
-    cout << "t2: " << endl << t2.displayTileStr() << endl;
-
-    cout << "Matches: " << endl;
-    cout << boolalpha;
-    cout << "if t2 is above t1: " << t1.isMatched(t2, Tile::ABOVE) << endl;
-    cout << "if t2 is below t1: " << t1.isMatched(t2, Tile::BELOW) << endl;
-    cout << "if t2 is to the left of t1: " << t1.isMatched(t2, Tile::LEFT)
-         << endl;
-    cout << "if t2 is to the right of t1: " << t1.isMatched(t2, Tile::RIGHT)
-         << endl
-         << endl;
-
-    cout << "if t1 is above t2: " << t2.isMatched(t1, Tile::ABOVE) << endl;
-    cout << "if t1 is below t2: " << t2.isMatched(t1, Tile::BELOW) << endl;
-    cout << "if t1 is to the left of t2: " << t2.isMatched(t1, Tile::LEFT)
-         << endl;
-    cout << "if t1 is to the right of t2: " << t2.isMatched(t1, Tile::RIGHT)
-         << endl;
-}
-
 /* Feel free to investigate the functions below, but you should not modify them
  */
 
@@ -303,10 +269,12 @@ bool loadPuzzle(Puzzle &puzzle) {
     Vector<string> files;
     Vector<string> allowableFiles;
 
-    listDirectory("puzzles", files);
+    string appDir = QCoreApplication::applicationDirPath().toStdString();
+
+    listDirectory(appDir + "/../Resources/puzzles", files);
 
     for (string f : files) {
-        if (isDirectory("puzzles/" + f)) {
+        if (isDirectory(appDir + "/../Resources/puzzles/" + f)) {
             allowableFiles.add(f);
             i++;
             cout << i << ". " << f << endl;
@@ -318,7 +286,8 @@ bool loadPuzzle(Puzzle &puzzle) {
         response = getInteger("Choose a number: ", "Please enter a number.");
     }
     cout << endl;
-    string puzzleDir = "puzzles/" + allowableFiles[response - 1];
+    string puzzleDir =
+        appDir + "/../Resources/puzzles/" + allowableFiles[response - 1];
 
     listDirectory(puzzleDir, files);
     cout << "Please choose the number of the file you would like to load:"
